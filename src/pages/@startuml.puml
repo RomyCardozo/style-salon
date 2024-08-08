@@ -1,0 +1,30 @@
+@startuml
+!define RECTANGLE_COLOR #D3D3D3
+
+actor Administrador
+actor Propietaria
+actor Funcionaria
+
+rectangle "Administrador" <<RECTANGLE_COLOR>> {
+  Administrador -> (Acceso total a todos los módulos y funciones)
+  Administrador -> (Supervisión del funcionamiento del sistema)
+  Administrador -> (Gestión y mantenimiento de la base de datos)
+  Administrador -> (Gestión y mantenimiento del servidor)
+}
+
+rectangle "Propietaria" <<RECTANGLE_COLOR>> {
+  Propietaria -> (Registro, modificación y anulación de usuarios)
+  Propietaria -> (Registro, modificación y anulación de clientes)
+  Propietaria -> (Registro, modificación y anulación de servicios)
+  Propietaria -> (Registro, modificación y anulación de ventas)
+  Propietaria -> (Revisión de informes y estadísticas de ventas y servicios)
+  Propietaria -> (Auditoría de los registros generados por el sistema)
+}
+
+rectangle "Funcionaria" <<RECTANGLE_COLOR>> {
+  Funcionaria -> (Registro y modificación de clientes)
+  Funcionaria -> (Registro y modificación de ventas)
+  Funcionaria -> (Atención y flujo de los clientes)
+}
+
+@enduml
