@@ -45,7 +45,7 @@ export const Login = ({ setIsLoggedIn }) => {
                         <span>Recuérdame</span>
                     </label>
                     <a
-                        className="text-blue-600 hover:text-blue-700 hover:underline hover:underline-offset-4"
+                        className="text-pink-600 hover:text-pink-700 hover:underline hover:underline-offset-4"
                         href="#"
                     >
                         ¿Olvidaste tu Contraseña?
@@ -53,7 +53,7 @@ export const Login = ({ setIsLoggedIn }) => {
                 </div>
                 <div className="text-center md:text-left">
                     <button
-                        className="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 text-white uppercase rounded text-xs tracking-wider"
+                        className="mt-4 bg-pink-600 hover:bg-pink-400 px-4 py-2 text-white uppercase rounded text-xs tracking-wider"
                         type="button"
                         onClick={handleLogin}  // Maneja el clic del botón
                     >

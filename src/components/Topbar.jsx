@@ -20,7 +20,7 @@ export const Topbar = () => {
 					alt="Profile"
 					className="w-10 h-10 rounded-full"
 				/>
-				<span className="ml-2 font-medium text-gray-800">Romy C.</span>
+				<span className="ml-2 font-medium text-gray-800">Victoria</span>
 				<button onClick={toggleDropdown} className="ml-2 text-gray-600">
 					<FaCaretDown />
 				</button>
@@ -36,12 +36,12 @@ export const Topbar = () => {
 				)}
 			</div>
 
-			<div className="relative">
+	{/*	<FaSearch className="text-gray-600 text-xl ml-4 cursor-pointer"	<div className="relative">
 				<FaBell className="text-blue-500 text-xl cursor-pointer" />
 				<span className="absolute bottom-3 right-0 left-2.5 flex items-center justify-center bg-red-500 text-white rounded-full text-xs px-1 h-3 w-3">
 					1
 				</span>
-			</div>
+			</div>/>*/}
 		</div>
 	);
 };

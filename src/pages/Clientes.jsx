@@ -4,15 +4,46 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { Modal } from "../components/Modal";
 
 const initialClients = [
-	{ id: 1, name: "John Doe", email: "john@example.com" },
-	{ id: 2, name: "John Doe", email: "john@example.com" },
-	{ id: 3, name: "John Doe", email: "john@example.com" },
-	{ id: 4, name: "John Doe", email: "john@example.com" },
-	{ id: 5, name: "John Doe", email: "john@example.com" },
-	{ id: 6, name: "John Doe", email: "john@example.com" },
-	{ id: 8, name: "John Doe", email: "john@example.com" },
-	{ id: 9, name: "John Doe", email: "john@example.com" },
-	{ id: 10, name: "John Doe", email: "john@example.com" },
+	{
+        id: 1,
+        nombre: "Juan",
+        apellido: "Pérez",
+        email: "juan.perez@example.com",
+        telefono: "+1234567890",
+        estado: "Activo"
+    },
+    {
+        id: 2,
+        nombre: "Ana",
+        apellido: "Gómez",
+        email: "ana.gomez@example.com",
+        telefono: "+0987654321",
+        estado: "Inactivo"
+    },
+    {
+        id: 3,
+        nombre: "Luis",
+        apellido: "Martínez",
+        email: "luis.martinez@example.com",
+        telefono: "+1122334455",
+        estado: "Activo"
+    },
+    {
+        id: 4,
+        nombre: "María",
+        apellido: "Rodríguez",
+        email: "maria.rodriguez@example.com",
+        telefono: "+5566778899",
+        estado: "Activo"
+    },
+    {
+        id: 5,
+        nombre: "Carlos",
+        apellido: "Hernández",
+        email: "carlos.hernandez@example.com",
+        telefono: "+6677889900",
+        estado: "Inactivo"
+    }
 	// Otros clientes...
 ];
 export const Clientes = () => {
@@ -38,13 +69,25 @@ export const Clientes = () => {
 			id: "id",
 			header: "ID",
 		}),
-		clientColumnHelper.accessor((row) => row.name, {
-			id: "name",
-			header: "Name",
+		clientColumnHelper.accessor((row) => row.nombre, {
+			id: "nombre",
+			header: "Nombre",
+		}),
+		clientColumnHelper.accessor((row) => row.apellido, {
+			id: "apellido",
+			header: "Apellido",
 		}),
 		clientColumnHelper.accessor((row) => row.email, {
 			id: "email",
 			header: "Email",
+		}),
+		clientColumnHelper.accessor((row) => row.telefono, {
+			id: "telefono",
+			header: "Telefono",
+		}),
+		clientColumnHelper.accessor((row) => row.estado, {
+			id: "estado",
+			header: "Estado",
 		}),
 	];
 
@@ -58,6 +101,8 @@ export const Clientes = () => {
 	return (
 		<div>
 			<h1 className="text-2xl font-bold">Clientes</h1>
+			 <div className="flex justify-end mb-4"><button className="bg-pink-500 hover:bg-pink-700
+			  text-white font-bold py-2 px-4 rounded">add cliente</button></div>
 			<MyTable
 				columns={clientColumns}
 				data={clients}
