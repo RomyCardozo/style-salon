@@ -1,5 +1,7 @@
 // Table.jsx
 import React from "react";
+import { MdDeleteForever } from "react-icons/md";
+import { CiEdit } from "react-icons/ci";
 import {
 	useReactTable,
 	flexRender,
@@ -19,8 +21,8 @@ export const MyTable = ({ columns, data, onRowUpdate, onRowDelete }) => {
 	});
 
 	return (
-		<div className="overflow-x-auto">
-			<table className="min-w-full divide-y divide-gray-200">
+		<div className="overflow-x-auto rounded-lg">
+			<table className="min-w-full divide-y divide-gray-200 ">
 				<thead className="bg-gray-50">
 					{table.getHeaderGroups().map((headerGroup) => (
 						<tr key={headerGroup.id}>
@@ -60,13 +62,13 @@ export const MyTable = ({ columns, data, onRowUpdate, onRowDelete }) => {
 									onClick={() => onRowUpdate(row.original)}
 									className="text-indigo-600 hover:text-indigo-900"
 								>
-									Edit
+									<CiEdit size={30}/>
 								</button>
 								<button
 									onClick={() => onRowDelete(row.original)}
 									className="ml-4 text-red-600 hover:text-red-900"
 								>
-									Delete
+									<MdDeleteForever size={30} />
 								</button>
 							</td>
 						</tr>

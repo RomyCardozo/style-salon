@@ -13,14 +13,14 @@ export const Topbar = () => {
 		console.log("Logout clicked");
 	};
 	return (
-		<div className="right-0  text-white h-16 z-10 w-full bg-white shadow p-4 flex justify-between items-center fixed top-0 left-0">
+		<div className="right-0  text-white h-16 z-10 w-full bg-gradient-to-r from-purple-100 via-purple-300 	 to-purple-100 shadow p-4 flex justify-between items-center fixed top-0 left-0">
 			<div className="flex items-center">
 				<img
-					src="https://via.placeholder.com/40"
+					src="/logo_viky.png"
 					alt="Profile"
 					className="w-10 h-10 rounded-full"
 				/>
-				<span className="ml-2 font-medium text-gray-800">Victoria</span>
+				<span className="ml-2 font-medium text-black">Victoria</span>
 				<button onClick={toggleDropdown} className="ml-2 text-gray-600">
 					<FaCaretDown />
 				</button>

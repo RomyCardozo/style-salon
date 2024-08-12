@@ -101,7 +101,7 @@ export const Clientes = () => {
 	return (
 		<div>
 			<h1 className="text-2xl font-bold">Clientes</h1>
-			 <div className="flex justify-end mb-4"><button className="bg-pink-500 hover:bg-pink-700
+			 <div className="flex justify-end mb-4"><button className="bg-purple-500 hover:bg-purple-700
 			  text-white font-bold py-2 px-4 rounded">add cliente</button></div>
 			<MyTable
 				columns={clientColumns}

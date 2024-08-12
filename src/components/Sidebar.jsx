@@ -25,7 +25,8 @@ export const Sidebar = () => {
 
 
 	return (
-		<div className="w-64 text-white flex-shrink-0 mt-16 p-4 bg-pink-200 shadow-lg rounded-lg">
+<div className="w-64 text-white flex-shrink-0 mt-16 p-4 bg-gradient-to-r from-purple-500 via-purple-400 to-purple-500 shadow-lg rounded-lg">
+
 			{menuItems.map((item) => (
 				<div key={item.title}>
 					<MenuItem

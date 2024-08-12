@@ -4,10 +4,10 @@ export const MenuItem = ({ icon, title, active, link }) => {
 	return (
 		<Link to={link}
 			className={`flex items-center p-2 my-1 transition-colors duration-200
-			 text-gray-600 rounded-lg cursor-pointer hover:bg-pink-100 ${
+			 text-white rounded-lg cursor-pointer hover:bg-purple-300 ${
 				active
-					? "bg-pink-100 text-pink-500"
-					: "text-gray-600 hover:text-pink-500"
+					? "bg-purple-300 text-black"
+					: "text-white hover:text-black"
 			}`}
 		>
 			<div className="text-xl">{icon}</div>
