@@ -13,7 +13,7 @@ import {
 
 export const Home = () => {
 	return (
-		<div className="flex h-screen w-full">
+		<div className="flex min-h-screen w-full ">
 			<Sidebar />
 			<div className="flex-1 flex flex-col">
 				<Topbar />
