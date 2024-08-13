@@ -16,7 +16,7 @@ export const Topbar = () => {
 		<div className="right-0  text-white h-16 z-10 w-full bg-gradient-to-r from-purple-100 via-purple-300 	 to-purple-100 shadow p-4 flex justify-between items-center fixed top-0 left-0">
 			<div className="flex items-center">
 				<img
-					src="/logo_viky.png"
+					src="/Logo2Salon.jpg"
 					alt="Profile"
 					className="w-10 h-10 rounded-full"
 				/>
