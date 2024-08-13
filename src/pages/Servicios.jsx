@@ -2,55 +2,46 @@ import { useState } from "react";
 import { MyTable } from "../components/MyTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Modal } from "../components/Modal";
+import { ServiciosForm } from "../components/form/ServiciosForm";
 
 
 
 const initialServicios = [
 	{
-        id: 1,
-        nombre: "Juan",
-        apellido: "Pérez",
-        email: "juan.perez@example.com",
-        telefono: "+1234567890",
-        estado: "Activo",
-		isSale: true
-    },
-    {
-        id: 2,
-        nombre: "Ana",
-        apellido: "Gómez",
-        email: "ana.gomez@example.com",
-        telefono: "+0987654321",
-        estado: "Inactivo",
-		isSale: true
-    },
-    {
-        id: 3,
-        nombre: "Luis",
-        apellido: "Martínez",
-        email: "luis.martinez@example.com",
-        telefono: "+1122334455",
-        estado: "Activo",
-		isSale: true
-    },
-    {
-        id: 4,
-        nombre: "María",
-        apellido: "Rodríguez",
-        email: "maria.rodriguez@example.com",
-        telefono: "+5566778899",
-        estado: "Activo",
-		isSale: true
-    },
-    {
-        id: 5,
-        nombre: "Carlos",
-        apellido: "Hernández",
-        email: "carlos.hernandez@example.com",
-        telefono: "+6677889900",
-        estado: "Inactivo",
-		isSale: true
-    }
+		id: 1,
+		nombre: "Corte de Cabello",
+		descripcion: "Corte de cabello clásico para hombre o mujer",
+		precio: "25,000",
+		estado: "Activo",
+	},
+	{
+		id: 2,
+		nombre: "Manicure",
+		descripcion: "Servicio de manicure con esmaltado permanente",
+		precio: "30,000",
+		estado: "Activo",
+	},
+	{
+		id: 3,
+		nombre: "Pedicure",
+		descripcion: "Pedicure completo con tratamiento exfoliante",
+		precio: "35,000",
+		estado: "Activo",
+	},
+	{
+		id: 4,
+		nombre: "Coloración",
+		descripcion: "Coloración completa para todo tipo de cabello",
+		precio: "80,000",
+		estado: "Inactivo",
+	},
+	{
+		id: 5,
+		nombre: "Masaje Relajante",
+		descripcion: "Masaje de cuerpo completo de 60 minutos",
+		precio: "120,000",
+		estado: "Activo",
+	},
 	// Otros clientes...
 ];
 export const Servicios = () => {
@@ -81,17 +72,13 @@ export const Servicios = () => {
 			id: "nombre",
 			header: "Nombre",
 		}),
-		servicioColumnHelper.accessor((row) => row.apellido, {
-			id: "apellido",
-			header: "Apellido",
+		servicioColumnHelper.accessor((row) => row.descripcion, {
+			id: "descripcion",
+			header: "Descripción",
 		}),
-		servicioColumnHelper.accessor((row) => row.email, {
-			id: "email",
-			header: "Email",
-		}),
-		servicioColumnHelper.accessor((row) => row.telefono, {
-			id: "telefono",
-			header: "Telefono",
+		servicioColumnHelper.accessor((row) => row.precio, {
+			id: "precio",
+			header: "Precio",
 		}),
 		servicioColumnHelper.accessor((row) => row.estado, {
 			id: "estado",
@@ -99,27 +86,30 @@ export const Servicios = () => {
 		}),
 	];
 
-	const handleClientUpdate = (updatedClient) => {
-		// Lógica para actualizar servicioe
+	const handleServicioUpdate = (updatedClient) => {
+		// Lógica para actualizar servicio
 	};
 
-	const handleClientDelete = (servicioToDelete) => {
+	const handleServicioDelete = (servicioToDelete) => {
 		setServicios(servicios.filter((servicio) => servicio.id !== servicioToDelete.id));
 	};
 	return (
 		<div>
 			<h1 className="text-2xl font-bold">Servicios</h1>
+			<div className="flex justify-end mb-4"><button className="bg-purple-500 hover:bg-purple-700
+			  text-white font-bold py-2 px-4 rounded">add service </button></div>
+			{/* <ServiciosForm onSubmit={handleServicioUpdate} />*/}
 			<MyTable
 				columns={servicioColumns}
 				data={servicios}
 				onRowUpdate={(row) => openModal("servicio", row)}
-				onRowDelete={(row) => handleClientDelete(row)}
+				onRowDelete={(row) => handleServicioDelete(row)}
 			/>
 
 			<Modal
 				isOpen={isModalOpen}
 				onClose={closeModal}
-				onSubmit={modalType === "servicio" ? handleClientUpdate : ""}
+				onSubmit={modalType === "servicio" ? handleServicioUpdate : ""}
 				initialValues={modalData}
 			/>
 		</div>
