@@ -9,12 +9,13 @@ export const Topbar = () => {
 	};
 
 	const handleLogout = () => {
+
 		// Aquí puedes agregar la lógica para cerrar sesión
 		console.log("Logout clicked");
 	};
 	return (
 		<div className="right-0  text-white h-16 z-10 w-full bg-gradient-to-r from-purple-100 via-purple-300 	 to-purple-100 shadow p-4 flex justify-between items-center fixed top-0 left-0">
-			<div className="flex items-center">
+			<div className="flex items-center ">
 				<img
 					src="/Logo2Salon.jpg"
 					alt="Profile"
@@ -29,8 +30,9 @@ export const Topbar = () => {
 						<button
 							onClick={handleLogout}
 							className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+							
 						>
-							Cerrar sesión
+							Cerrar sesión 
 						</button>
 					</div>
 				)}
