@@ -2,6 +2,7 @@
 import React from "react";
 import { MdDeleteForever } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
+import { FaEye } from "react-icons/fa";
 import {
 	useReactTable,
 	flexRender,
@@ -11,7 +12,7 @@ import {
 } from "@tanstack/react-table";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-export const MyTable = ({ columns, data, onRowUpdate, onRowDelete }) => {
+export const MyTable = ({ columns, data, onRowUpdate, onRowDelete, onViewDetails }) => {
 	const table = useReactTable({
 		data,
 		columns,
@@ -34,9 +35,9 @@ export const MyTable = ({ columns, data, onRowUpdate, onRowDelete }) => {
 									{header.isPlaceholder
 										? null
 										: flexRender(
-												header.column.columnDef.header,
-												header.getContext()
-										  )}
+											header.column.columnDef.header,
+											header.getContext()
+										)}
 								</th>
 							))}
 							<th className="px-6 py-3"></th>
@@ -62,7 +63,7 @@ export const MyTable = ({ columns, data, onRowUpdate, onRowDelete }) => {
 									onClick={() => onRowUpdate(row.original)}
 									className="text-indigo-600 hover:text-indigo-900"
 								>
-									<CiEdit size={30}/>
+									<CiEdit size={30} />
 								</button>
 								<button
 									onClick={() => onRowDelete(row.original)}
@@ -70,6 +71,16 @@ export const MyTable = ({ columns, data, onRowUpdate, onRowDelete }) => {
 								>
 									<MdDeleteForever size={30} />
 								</button>
+								{
+									row.original.isSale && ( // Verifica si es una fila de ventas
+										<button
+											onClick={() => onViewDetails(row.original)}
+											className="ml-4 text-blue-600 hover:text-blue-900"
+										>
+											<FaEye  size={25} />
+										</button>
+									)
+								}
 							</td>
 						</tr>
 					))}

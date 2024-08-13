@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MyTable } from "../components/MyTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Modal } from "../components/Modal";
+import { ClienteForm } from "../components/form/ClienteForm";
 
 const initialClients = [
 	{
@@ -10,7 +11,7 @@ const initialClients = [
         apellido: "Pérez",
         email: "juan.perez@example.com",
         telefono: "+1234567890",
-        estado: "Activo"
+        estado: "Activo",
     },
     {
         id: 2,
@@ -26,7 +27,7 @@ const initialClients = [
         apellido: "Martínez",
         email: "luis.martinez@example.com",
         telefono: "+1122334455",
-        estado: "Activo"
+        estado: "Activo",
     },
     {
         id: 4,
@@ -34,7 +35,7 @@ const initialClients = [
         apellido: "Rodríguez",
         email: "maria.rodriguez@example.com",
         telefono: "+5566778899",
-        estado: "Activo"
+        estado: "Activo",
     },
     {
         id: 5,
@@ -42,7 +43,7 @@ const initialClients = [
         apellido: "Hernández",
         email: "carlos.hernandez@example.com",
         telefono: "+6677889900",
-        estado: "Inactivo"
+        estado: "Inactivo",
     }
 	// Otros clientes...
 ];
@@ -101,8 +102,9 @@ export const Clientes = () => {
 	return (
 		<div>
 			<h1 className="text-2xl font-bold">Clientes</h1>
+			{/* <ClienteForm /> */}
 			 <div className="flex justify-end mb-4"><button className="bg-purple-500 hover:bg-purple-700
-			  text-white font-bold py-2 px-4 rounded">add cliente</button></div>
+			  text-white font-bold py-2 px-4 rounded">add cliente </button></div>
 			<MyTable
 				columns={clientColumns}
 				data={clients}

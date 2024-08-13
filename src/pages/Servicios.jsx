@@ -12,7 +12,8 @@ const initialServicios = [
         apellido: "Pérez",
         email: "juan.perez@example.com",
         telefono: "+1234567890",
-        estado: "Activo"
+        estado: "Activo",
+		isSale: true
     },
     {
         id: 2,
@@ -20,7 +21,8 @@ const initialServicios = [
         apellido: "Gómez",
         email: "ana.gomez@example.com",
         telefono: "+0987654321",
-        estado: "Inactivo"
+        estado: "Inactivo",
+		isSale: true
     },
     {
         id: 3,
@@ -28,7 +30,8 @@ const initialServicios = [
         apellido: "Martínez",
         email: "luis.martinez@example.com",
         telefono: "+1122334455",
-        estado: "Activo"
+        estado: "Activo",
+		isSale: true
     },
     {
         id: 4,
@@ -36,7 +39,8 @@ const initialServicios = [
         apellido: "Rodríguez",
         email: "maria.rodriguez@example.com",
         telefono: "+5566778899",
-        estado: "Activo"
+        estado: "Activo",
+		isSale: true
     },
     {
         id: 5,
@@ -44,7 +48,8 @@ const initialServicios = [
         apellido: "Hernández",
         email: "carlos.hernandez@example.com",
         telefono: "+6677889900",
-        estado: "Inactivo"
+        estado: "Inactivo",
+		isSale: true
     }
 	// Otros clientes...
 ];
