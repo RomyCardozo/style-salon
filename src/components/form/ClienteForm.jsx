@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 
-export const ClienteForm = ({ onSubmit, getClientById }) => {
+export const ClienteForm = ({ onSubmit, getClientById, data }) => {
 	const { id } = useParams();
 	const {
 		register,
@@ -16,6 +16,11 @@ export const ClienteForm = ({ onSubmit, getClientById }) => {
 
 	// Fetch client data if editing
 	useEffect(() => {
+		console.log(data);
+		if (data){
+			setClient(data);
+			reset(data);
+		}
 		if (id) {
 			const fetchData = async () => {
 				const data = await getClientById(id);
@@ -27,11 +32,12 @@ export const ClienteForm = ({ onSubmit, getClientById }) => {
 	}, [id, reset, getClientById]);
 
 	const onSubmitForm = (data) => {
+		console.log(data);
 		onSubmit(data);
 	};
 
 	return (
-		<div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
+		<div className="max-w-lg mx-auto p-6 bg-white rounded-lg">
 			<h2 className="text-2xl font-semibold mb-4">
 				{id ? "Editar Cliente" : "Crear Cliente"}
 			</h2>
