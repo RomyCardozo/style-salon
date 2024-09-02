@@ -6,3 +6,4 @@ export { Servicios } from './Servicios';
 export { Usuarios } from './Usuarios';
 export { Venta } from './Venta';
 export { Home } from './Home';
+export { PosSalon } from './PosSalon';

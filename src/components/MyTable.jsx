@@ -58,7 +58,7 @@ export const MyTable = ({ columns, data, onRowUpdate, onRowDelete, onViewDetails
 									)}
 								</td>
 							))}
-							<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+							{/*<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 								<button
 									onClick={() => onRowUpdate(row.original)}
 									className="text-indigo-600 hover:text-indigo-900"
@@ -81,7 +81,7 @@ export const MyTable = ({ columns, data, onRowUpdate, onRowDelete, onViewDetails
 										</button>
 									)
 								}
-							</td>
+							</td>*/}
 						</tr>
 					))}
 				</tbody>

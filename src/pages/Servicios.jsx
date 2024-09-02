@@ -1,117 +1,152 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MyTable } from "../components/MyTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Modal } from "../components/Modal";
 import { ServiciosForm } from "../components/form/ServiciosForm";
+import {
+    fetchServicios,
+    createServicio,
+    updateServicio,
+    deleteServicio
+} from "../services/servicioService";
+import { CiEdit } from "react-icons/ci";
+import { MdDeleteForever } from "react-icons/md";
 
-
-
-const initialServicios = [
-	{
-		id: 1,
-		nombre: "Corte de Cabello",
-		descripcion: "Corte de cabello clásico para hombre o mujer",
-		precio: "25,000",
-		estado: "Activo",
-	},
-	{
-		id: 2,
-		nombre: "Manicure",
-		descripcion: "Servicio de manicure con esmaltado permanente",
-		precio: "30,000",
-		estado: "Activo",
-	},
-	{
-		id: 3,
-		nombre: "Pedicure",
-		descripcion: "Pedicure completo con tratamiento exfoliante",
-		precio: "35,000",
-		estado: "Activo",
-	},
-	{
-		id: 4,
-		nombre: "Coloración",
-		descripcion: "Coloración completa para todo tipo de cabello",
-		precio: "80,000",
-		estado: "Inactivo",
-	},
-	{
-		id: 5,
-		nombre: "Masaje Relajante",
-		descripcion: "Masaje de cuerpo completo de 60 minutos",
-		precio: "120,000",
-		estado: "Activo",
-	},
-	// Otros clientes...
-];
 export const Servicios = () => {
-  
-	const [servicios, setServicios] = useState(initialServicios);
-	const servicioColumnHelper = createColumnHelper();
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [modalData, setModalData] = useState(null);
-	const [modalType, setModalType] = useState(null);
+    const [servicios, setServicios] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const servicioColumnHelper = createColumnHelper();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalData, setModalData] = useState(null);
+    const [modalType, setModalType] = useState(null);
 
-	const openModal = (type, data = null) => {
-		setModalType(type);
-		setModalData(data);
-		setIsModalOpen(true);
-	};
+    useEffect(() => {
+        const loadServicios = async () => {
+            try {
+                const data = await fetchServicios();
+                setServicios(data);
+            } catch (error) {
+                console.error('Error loading servicios:', error);
+                setError('Error loading services');
+            } finally {
+                setLoading(false);
+            }
+        };
 
-	const closeModal = () => {
-		setIsModalOpen(false);
-		setModalData(null);
-	};
+        loadServicios();
+    }, []);
 
-	const servicioColumns = [
-		servicioColumnHelper.accessor((row) => row.id, {
-			id: "id",
-			header: "ID",
-		}),
-		servicioColumnHelper.accessor((row) => row.nombre, {
-			id: "nombre",
-			header: "Nombre",
-		}),
-		servicioColumnHelper.accessor((row) => row.descripcion, {
-			id: "descripcion",
-			header: "Descripción",
-		}),
-		servicioColumnHelper.accessor((row) => row.precio, {
-			id: "precio",
-			header: "Precio",
-		}),
-		servicioColumnHelper.accessor((row) => row.estado, {
-			id: "estado",
-			header: "Estado",
-		}),
-	];
+    const openModal = (type, data = null) => {
+        setModalType(type);
+        setModalData(data);
+        setIsModalOpen(true);
+    };
 
-	const handleServicioUpdate = (updatedClient) => {
-		// Lógica para actualizar servicio
-	};
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setModalData(null);
+    };
 
-	const handleServicioDelete = (servicioToDelete) => {
-		setServicios(servicios.filter((servicio) => servicio.id !== servicioToDelete.id));
-	};
-	return (
-		<div>
-			<h1 className="text-2xl font-bold">Servicios</h1>
-			<div className="flex justify-end mb-4"><button className="bg-purple-500 hover:bg-purple-700
-			  text-white font-bold py-2 px-4 rounded">add service </button></div>
-			{/* <ServiciosForm onSubmit={handleServicioUpdate} />*/}
-			<MyTable
-				columns={servicioColumns}
-				data={servicios}
-				onRowUpdate={(row) => openModal("servicio", row)}
-				onRowDelete={(row) => handleServicioDelete(row)}
-			/>
+    const handleServiceCreate = async (newService) => {
+        try {
+            const createdService = await createServicio(newService);
+            setServicios([...servicios, createdService]);
+            closeModal();
+        } catch (error) {
+            console.error('Error creating servicio:', error);
+            setError('Error creating service');
+        }
+    };
 
-			<Modal
-				isOpen={isModalOpen}
-				onClose={closeModal}
-				onSubmit={modalType === "servicio" ? handleServicioUpdate : ""}
-				initialValues={modalData}
-			/>
-		</div>
-	);
-}
+    const handleServicioUpdate = async (updatedService) => {
+        try {
+            const updatedServicio = await updateServicio(updatedService.id, updatedService);
+            setServicios(servicios.map(servicio =>
+                servicio.id === updatedServicio.id ? updatedServicio : servicio
+            ));
+            closeModal();
+        } catch (error) {
+            console.error('Error updating servicio:', error);
+            setError('Error updating service');
+        }
+    };
+
+    const handleServicioDelete = async (servicioToDelete) => {
+        try {
+            await deleteServicio(servicioToDelete.id);
+            setServicios(servicios.filter(servicio => servicio.id !== servicioToDelete.id));
+        } catch (error) {
+            console.error('Error deleting servicio:', error);
+            setError('Error deleting service');
+        }
+    };
+
+    const servicioColumns = [
+        servicioColumnHelper.accessor("id", {
+            header: "ID",
+        }),
+        servicioColumnHelper.accessor("nombre", {
+            header: "Nombre",
+        }),
+        servicioColumnHelper.accessor("descripcion", {
+            header: "Descripción",
+        }),
+        servicioColumnHelper.accessor("precio", {
+            header: "Precio",
+            cell: info => `$${info.getValue().toLocaleString()}`,
+        }),
+        servicioColumnHelper.accessor("estado", {
+            header: "Estado",
+        }),
+        servicioColumnHelper.display({
+            id: 'actions',
+            header: 'Acciones',
+            cell: ({ row }) => (
+                <div className="flex space-x-4">
+                    <button
+                        onClick={() => openModal("edit", row.original)}
+                        className="text-blue-500 hover:text-blue-700"
+                    >
+                        <CiEdit size={30} />
+                    </button>
+                    <button
+                        onClick={() => handleServicioDelete(row.original)}
+                        className="text-red-500 hover:text-red-700"
+                    >
+                        <MdDeleteForever size={30} />
+                    </button>
+                </div>
+            ),
+        }),
+    ];
+
+    if (loading) return <div>Cargando servicios...</div>;
+    if (error) return <div>{error}</div>;
+
+    return (
+        <div>
+            <h1 className="text-2xl font-bold mb-4">Servicios</h1>
+            <div className="flex justify-end mb-4">
+                <button
+                    onClick={() => openModal("create")}
+                    className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+                >
+                    Agregar Servicio
+                </button>
+            </div>
+            <MyTable columns={servicioColumns} data={servicios} />
+
+            <Modal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+            >
+                <ServiciosForm
+                    initialValues={modalData}
+                    onSubmit={modalType === "create" ? handleServiceCreate : handleServicioUpdate}
+                    onCancel={closeModal}
+                />
+            </Modal>
+        </div>
+    );
+};

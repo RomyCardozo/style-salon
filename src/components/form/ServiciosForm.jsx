@@ -32,7 +32,7 @@ export const ServiciosForm = ({ onSubmit, initialData }) => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
-            <div className="mb-4">
+            {/* ID and Nombre <div className="mb-4">
                 <label className="block text-gray-700">ID</label>
                 <input
                     {...register("id", { required: true })}
@@ -40,7 +40,7 @@ export const ServiciosForm = ({ onSubmit, initialData }) => {
                     disabled={!!id} // Disable if editing
                 />
                 {errors.id && <span className="text-red-500 text-sm">Este campo es requerido</span>}
-            </div>
+            </div>*/}
             <div className="mb-4">
                 <label className="block text-gray-700">Nombre</label>
                 <input

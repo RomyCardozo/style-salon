@@ -1,20 +1,57 @@
-import { Route, Routes, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { Route, Routes } from "react-router-dom";
+// pages
 import { Home } from "./pages";
 import { LoginPage } from "./pages/auth/LoginPage";
 
-function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
+import { PrivateRoutes } from "./routes/PrivateRoutes";
+import { PublicRoutes } from "./routes/PublicRoutes";
+import { AuthProvider } from "./context/AuthContext";
+import { UserProvider } from "./context/UserContext";
+import { SalesProvider } from "./context/SalesContext";
+import { CustomerProvider } from "./context/CustomerContext";
+import { ServiceProvider } from "./context/ServicesContext";
 
-    return (
-        <div className="flex w-full bg-gray-50 ">
-            <Routes>
-                <Route path="/" element={isLoggedIn ? <Home /> : <Navigate to="/login" />} />
-                <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} />
-                <Route path="/home/*" element={isLoggedIn ? <Home /> : <Navigate to="/login" />} />
-            </Routes>
-        </div>
-    );
+function App() {
+	return (
+		<div className="flex w-full bg-gray-50">
+			<AuthProvider>
+				<UserProvider>
+					<SalesProvider>
+						<CustomerProvider>
+							<ServiceProvider>
+							<Routes>
+								<Route path="/">
+								
+									{/* Public Routes */}
+									<Route element={<PublicRoutes />}>
+										<Route
+											index
+											element={<LoginPage />}
+										></Route>
+									</Route>
+
+
+									{/* Private Routes */}
+									<Route element={<PrivateRoutes />}>
+										<Route
+											path="/home/*"
+											element={<Home />}
+										></Route>
+
+									</Route>
+									<Route
+										path="*"
+										element={<h1>Page not found</h1>}
+									/>
+								</Route>
+							</Routes>
+							</ServiceProvider>
+						</CustomerProvider>
+					</SalesProvider>
+				</UserProvider>
+			</AuthProvider>
+		</div>
+	);
 }
 
 export default App;
