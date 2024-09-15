@@ -5,6 +5,8 @@ import { Modal } from "../components/Modal";
 import { VentaForm } from "../components/form/VentaForm";
 import { Link } from "react-router-dom";
 import { FaEye } from "react-icons/fa"; // Icono de ojo
+import { MdDeleteForever } from "react-icons/md";
+import { CiEdit } from "react-icons/ci";
 
 const initialVentas = [
   {
@@ -106,10 +108,25 @@ export const Venta = () => {
       id: "actions",
       header: "Detalle",
       cell: ({ row }) => (
-        <Link to={`/home/venta/${row.original.id}`} className="text-blue-500 hover:text-blue-700">
-          <FaEye className="w-6 h-7"  />
-        </Link>
+        <div className="flex space-x-4">
+          <Link to={`/home/venta/${row.original.id}`} className="text-blue-500 hover:text-blue-700">
+            <FaEye className="w-6 h-7" />
+          </Link>
+          <button
+            onClick={() => openModal("edit", row.original)}
+            className="text-blue-500 hover:text-blue-700"
+          >
+            <CiEdit size={30} />
+          </button>
+          <button
+            onClick={() => handleServicioDelete(row.original)}
+            className="text-red-500 hover:text-red-700"
+          >
+            <MdDeleteForever size={30} />
+          </button>
+        </div>
       ),
+
     }),
   ];
 
@@ -145,7 +162,7 @@ export const Venta = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
-        onSubmit={modalType === "venta" ? handleVentaUpdate : () => {}}
+        onSubmit={modalType === "venta" ? handleVentaUpdate : () => { }}
         initialValues={modalData}
       />
     </div>
