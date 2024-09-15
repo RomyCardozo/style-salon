@@ -55,3 +55,20 @@ export const deleteServicio = async (id) => {
         throw error;
     }
 };
+
+// Obtener servicios con búsqueda y paginación
+export const fetchServiciosWithFilter = async (searchTerm = '', page = 0, size = 10) => {
+    try {
+        const response = await api.get('servicio/listarPaginado', {
+            params: {
+                q: searchTerm,
+                page: page,
+                size: size
+            }
+        });
+        return response.data.Lista; // Ajusta esto según el formato de respuesta del backend
+    } catch (error) {
+        console.error('Error fetching servicios with filter:', error);
+        throw error;
+    }
+};
