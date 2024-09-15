@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 
-export const ServiciosForm = ({ onSubmit, initialData }) => {
+export const ServiciosForm = ({ onSubmit, initialValues, modalType }) => {
     const { id } = useParams();
     const {
         register,
@@ -20,15 +20,15 @@ export const ServiciosForm = ({ onSubmit, initialData }) => {
     });
 
     useEffect(() => {
-        if (initialData && id) {
+        if (initialValues) {
             // Set the values when editing
-            setValue("id", initialData.id);
-            setValue("nombre", initialData.nombre);
-            setValue("descripcion", initialData.descripcion);
-            setValue("precio", initialData.precio);
-            setValue("estado", initialData.estado);
+            setValue("id", initialValues.id);
+            setValue("nombre", initialValues.nombre);
+            setValue("descripcion", initialValues.descripcion);
+            setValue("precio", initialValues.precio);
+            setValue("estado", initialValues.estado);
         }
-    }, [id, initialData, setValue]);
+    }, [initialValues, setValue]);
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
@@ -82,7 +82,8 @@ export const ServiciosForm = ({ onSubmit, initialData }) => {
                 type="submit"
                 className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded"
             >
-                {id ? "Actualizar Servicio" : "Crear Servicio"}
+                {/*{id ? "Actualizar Servicio" : "Crear Servicio"}*/}
+                {modalType === "create" ? "Crear Servicio" : "Actualizar Servicio"}
             </button>
         </form>
     );
