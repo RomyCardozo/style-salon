@@ -20,12 +20,15 @@ export const Servicios = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalData, setModalData] = useState(null);
     const [modalType, setModalType] = useState(null);
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false); // Estado para el modal de confirmación
+    const [servicioToDelete, setServicioToDelete] = useState(null); // Servicio que se va a eliminar
 
     useEffect(() => {
         const loadServicios = async () => {
             try {
                 const data = await fetchServicios();
-                setServicios(data);
+                const activeServices = data.filter(servicio => servicio.estado === "Activo"); // Filtrar solo los servicios activos
+                setServicios(activeServices);
             } catch (error) {
                 console.error('Error loading servicios:', error);
                 setError('Error loading services');
@@ -72,10 +75,27 @@ export const Servicios = () => {
         }
     };
 
-    const handleServicioDelete = async (servicioToDelete) => {
+    /* const handleServicioDelete = async (servicioToDelete) => {
+         try {
+             await deleteServicio(servicioToDelete.id);
+             setServicios(servicios.filter(servicio => servicio.id !== servicioToDelete.id));
+         } catch (error) {
+             console.error('Error deleting servicio:', error);
+             setError('Error deleting service');
+         }
+     };*/
+    // Abre el modal de confirmación para eliminar
+    const openDeleteConfirm = (servicio) => {
+        setServicioToDelete(servicio); // Establece el servicio a eliminar
+        setIsConfirmOpen(true); // Abre el modal de confirmación
+    };
+
+    // Confirma y elimina el servicio
+    const confirmDelete = async () => {
         try {
-            await deleteServicio(servicioToDelete.id);
-            setServicios(servicios.filter(servicio => servicio.id !== servicioToDelete.id));
+            await deleteServicio(servicioToDelete.id); // Llama al backend para eliminar
+            setServicios(servicios.filter(servicio => servicio.id !== servicioToDelete.id)); // Filtra el servicio eliminado de la lista
+            setIsConfirmOpen(false); // Cierra el modal de confirmación
         } catch (error) {
             console.error('Error deleting servicio:', error);
             setError('Error deleting service');
@@ -111,7 +131,7 @@ export const Servicios = () => {
                         <CiEdit size={30} />
                     </button>
                     <button
-                        onClick={() => handleServicioDelete(row.original)}
+                        onClick={() => openDeleteConfirm(row.original)} // Cambia esto para que abra el modal
                         className="text-red-500 hover:text-red-700"
                     >
                         <MdDeleteForever size={30} />
@@ -123,7 +143,6 @@ export const Servicios = () => {
 
     if (loading) return <div>Cargando servicios...</div>;
     if (error) return <div>{error}</div>;
-
     return (
         <div>
             <h1 className="text-2xl font-bold mb-4">Servicios</h1>
@@ -143,10 +162,36 @@ export const Servicios = () => {
             >
                 <ServiciosForm
                     initialValues={modalData}
+                    modalType={modalType}
                     onSubmit={modalType === "create" ? handleServiceCreate : handleServicioUpdate}
                     onCancel={closeModal}
                 />
+
+
             </Modal>
+
+            {isConfirmOpen && (
+                <Modal isOpen={isConfirmOpen} onClose={() => setIsConfirmOpen(false)}>
+                    <div className="p-2 flex flex-col items-center  text-center "  >
+                        <h2 className="text-xl font-bold mb-4">¿Estás seguro que deseas eliminar este servicio?</h2>
+                        <div className="flex justify-end space-x-4">
+                            <button
+                                onClick={() => setIsConfirmOpen(false)}
+                                className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={confirmDelete}
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                            >
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </Modal>
+            )}
         </div>
+
     );
 };
