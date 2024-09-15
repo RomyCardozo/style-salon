@@ -1,159 +1,189 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MyTable } from "../components/MyTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Modal } from "../components/Modal";
 import { ClienteForm } from "../components/form/ClienteForm";
+import {
+    fetchClientes,
+    createCliente,
+    updateCliente,
+    deleteCliente
+} from "../services/clientesService"; // Asegúrate de tener este servicio implementado
 
-const initialClients = [
-	{
-		id: 1,
-		nombre: "Juan",
-		apellido: "Pérez",
-		email: "juan.perez@example.com",
-		telefono: "+1234567890",
-		estado: "Activo",
-	},
-	{
-		id: 2,
-		nombre: "Ana",
-		apellido: "Gómez",
-		email: "ana.gomez@example.com",
-		telefono: "+0987654321",
-		estado: "Inactivo"
-	},
-	{
-		id: 3,
-		nombre: "Luis",
-		apellido: "Martínez",
-		email: "luis.martinez@example.com",
-		telefono: "+1122334455",
-		estado: "Activo",
-	},
-	{
-		id: 4,
-		nombre: "María",
-		apellido: "Rodríguez",
-		email: "maria.rodriguez@example.com",
-		telefono: "+5566778899",
-		estado: "Activo",
-	},
-	{
-		id: 5,
-		nombre: "Carlos",
-		apellido: "Hernández",
-		email: "carlos.hernandez@example.com",
-		telefono: "+6677889900",
-		estado: "Inactivo",
-	}
-	// Otros clientes...
-];
+import { CiEdit } from "react-icons/ci";
+import { MdDeleteForever } from "react-icons/md";
+
 export const Clientes = () => {
-	const [clients, setClients] = useState(initialClients);
-	const [client, setClient] = useState({});
-	const clientColumnHelper = createColumnHelper();
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [modalData, setModalData] = useState(null);
-	const [modalType, setModalType] = useState(null);
+    const [clients, setClients] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const clientColumnHelper = createColumnHelper();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalData, setModalData] = useState(null);
+    const [modalType, setModalType] = useState(null);
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false); // Estado para el modal de confirmación
+    const [clientToDelete, setClientToDelete] = useState(null); // Cliente que se va a eliminar
 
-	const openModal = (type, data = null) => {
-		setModalType(type);
-		setModalData(data);
-		setIsModalOpen(true);
-	};
+    useEffect(() => {
+        const loadClientes = async () => {
+            try {
+                const data = await fetchClientes();
+                const activeClients = data.filter(cliente => cliente.estado === "Activo"); // Filtrar solo los clientes activos
+                setClients(activeClients);
+            } catch (error) {
+                console.error('Error loading clients:', error);
+                setError('Error loading clients');
+            } finally {
+                setLoading(false);
+            }
+        };
 
-	const onInit = (data ) => {
-		console.log("Init:", data);
-		if(data){
-			setClient(data);
-			
-		}
-		
+        loadClientes();
+    }, []);
 
-	}
-	const closeModal = () => {
-		setIsModalOpen(false);
-		setModalData(null);
-	};
+    const openModal = (type, data = null) => {
+        setModalType(type);
+        setModalData(data);
+        setIsModalOpen(true);
+    };
 
-	const clientColumns = [
-		clientColumnHelper.accessor((row) => row.id, {
-			id: "id",
-			header: "ID",
-		}),
-		clientColumnHelper.accessor((row) => row.nombre, {
-			id: "nombre",
-			header: "Nombre",
-		}),
-		clientColumnHelper.accessor((row) => row.apellido, {
-			id: "apellido",
-			header: "Apellido",
-		}),
-		clientColumnHelper.accessor((row) => row.email, {
-			id: "email",
-			header: "Email",
-		}),
-		clientColumnHelper.accessor((row) => row.telefono, {
-			id: "telefono",
-			header: "Telefono",
-		}),
-		clientColumnHelper.accessor((row) => row.estado, {
-			id: "estado",
-			header: "Estado",
-		}),
-	];
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setModalData(null);
+    };
 
-	const handleClientCreate = (newClient) => {
-		// Lógica para crear cliente
-		console.log(newClient);
-		setClients([...clients, newClient]);
-		closeModal();
-	};
-	const handleClientUpdate = (updatedClient) => {
-		
-	};
+    const handleClientCreate = async (newClient) => {
+        try {
+            const createdClient = await createCliente(newClient);
+            setClients([...clients, createdClient]);
+            closeModal();
+        } catch (error) {
+            console.error('Error creating client:', error);
+            setError('Error creating client');
+        }
+    };
 
-	const handleClientEdit = (updatedClient) => {
-		console.log("Edit:", updatedClient);
-		setClient(updatedClient);
-		
-		const updatedClients = clients.map((client) => {
-			if (client.id === updatedClient.id) {
-				return updatedClient;
-			}
-			return client;
-		});
-		setClients(updatedClients);
-		
-	};
+    const handleClientUpdate = async (updatedClient) => {
+        try {
+            const updated = await updateCliente(updatedClient.id, updatedClient);
+            setClients(clients.map(client =>
+                client.id === updated.id ? updated : client
+            ));
+            closeModal();
+        } catch (error) {
+            console.error('Error updating client:', error);
+            setError('Error updating client');
+        }
+    };
 
-	const handleClientDelete = (clientToDelete) => {
-		setClients(clients.filter((client) => client.id !== clientToDelete.id));
-	};
-	return (
-		<div>
-			<h1 className="text-2xl font-bold">Clientes</h1>
-			{/* <ClienteForm /> */}
-			<div className="flex justify-end mb-4"><button onClick={() => openModal("client")} className="bg-purple-500 hover:bg-purple-700
-			  text-white font-bold py-2 px-4 rounded">Añadir cliente</button></div>
-			<MyTable
-				columns={clientColumns}
-				data={clients}
-				onRowUpdate={(row) => {
-					handleClientUpdate(row);
-					openModal("client-edit", row)
-				}}
-				onRowDelete={(row) => handleClientDelete(row)}
-			/>
+    // Abre el modal de confirmación para eliminar
+    const openDeleteConfirm = (client) => {
+        setClientToDelete(client); // Establece el cliente a eliminar
+        setIsConfirmOpen(true); // Abre el modal de confirmación
+    };
 
-			<Modal
-				isOpen={isModalOpen}
-				onClose={closeModal}
-				onSubmit={modalType === "client" ? handleClientUpdate : handleClientEdit }
-				initialValues={modalData}
-				
-			>
-				<ClienteForm data={client} onSubmit={modalType === "client" ? handleClientCreate : handleClientEdit }/>
-			</Modal>
-		</div>
-	);
+    // Confirma y elimina el cliente (soft delete)
+    const confirmDelete = async () => {
+        try {
+            await deleteCliente(clientToDelete.id); // Llama al backend para hacer el soft delete
+            setClients(clients.filter(client => client.id !== clientToDelete.id)); // Filtra el cliente eliminado de la lista
+            setIsConfirmOpen(false); // Cierra el modal de confirmación
+        } catch (error) {
+            console.error('Error deleting client:', error);
+            setError('Error deleting client');
+        }
+    };
+
+    const clientColumns = [
+        clientColumnHelper.accessor("id", {
+            header: "ID",
+        }),
+        clientColumnHelper.accessor("nombre", {
+            header: "Nombre",
+        }),
+        clientColumnHelper.accessor("apellido", {
+            header: "Apellido",
+        }),
+        clientColumnHelper.accessor("email", {
+            header: "Email",
+        }),
+        clientColumnHelper.accessor("telefono", {
+            header: "Telefono",
+        }),
+        clientColumnHelper.accessor("estado", {
+            header: "Estado",
+        }),
+        clientColumnHelper.display({
+            id: 'actions',
+            header: 'Acciones',
+            cell: ({ row }) => (
+                <div className="flex space-x-4">
+                    <button
+                        onClick={() => openModal("edit", row.original)}
+                        className="text-blue-500 hover:text-blue-700"
+                    >
+                        <CiEdit size={30} />
+                    </button>
+                    <button
+                        onClick={() => openDeleteConfirm(row.original)} // Abre el modal de confirmación
+                        className="text-red-500 hover:text-red-700"
+                    >
+                        <MdDeleteForever size={30} />
+                    </button>
+                </div>
+            ),
+        }),
+    ];
+
+    if (loading) return <div>Cargando clientes...</div>;
+    if (error) return <div>{error}</div>;
+
+    return (
+        <div>
+            <h1 className="text-2xl font-bold mb-4">Clientes</h1>
+            <div className="flex justify-end mb-4">
+                <button
+                    onClick={() => openModal("create")}
+                    className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+                >
+                    Agregar Cliente
+                </button>
+            </div>
+            <MyTable columns={clientColumns} data={clients} />
+
+            <Modal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+            >
+                <ClienteForm
+                    initialValues={modalData}
+                    modalType={modalType}
+                    onSubmit={modalType === "create" ? handleClientCreate : handleClientUpdate}
+                    onCancel={closeModal}
+                />
+            </Modal>
+
+            {isConfirmOpen && (
+                <Modal isOpen={isConfirmOpen} onClose={() => setIsConfirmOpen(false)}>
+                    <div className="p-2 flex flex-col items-center text-center">
+                        <h2 className="text-xl font-bold mb-4">¿Estás seguro que deseas eliminar este cliente?</h2>
+                        <div className="flex justify-end space-x-4">
+                            <button
+                                onClick={() => setIsConfirmOpen(false)}
+                                className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={confirmDelete}
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                            >
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </Modal>
+            )}
+        </div>
+    );
 };
