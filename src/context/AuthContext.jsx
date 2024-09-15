@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
 					const currentUser = await getCurrentUser(token);
 					console.log({currentUser})
 					setUser(currentUser);
-					setIsAuthenticated(true);//cambiar cuando tenga mi logica de token
+					setIsAuthenticated(false);//cambiar cuando tenga mi logica de token
 				} catch (err) {
 					console.error(
 						"Failed to fetch user during initialization",
