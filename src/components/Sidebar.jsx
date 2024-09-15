@@ -6,14 +6,14 @@ import {
 	FaUser,
 	FaShoppingCart,
 	FaChartBar,
-	FaCog,
-	FaUserCircle,
+	FaCog
 } from "react-icons/fa";
+import { GiHairStrands } from "react-icons/gi";
 import { useLocation } from "react-router-dom";
 
 const menuItems = [
 	{ icon: <FaUsers />, title: "Clientes", link: "/home/clientes" },
-	{ icon: <FaServicestack />, title: "Servicios", link: "/home/servicios" },
+	{ icon: <GiHairStrands />, title: "Servicios", link: "/home/servicios" },
 	{ icon: <FaUser />, title: "Usuarios", link: "/home/usuarios" },
 	{ icon: <FaShoppingCart />, title: "Venta", link: "/home/venta" },
 	{ icon: <FaChartBar />, title: "Informes", link: "/home/informes" },
