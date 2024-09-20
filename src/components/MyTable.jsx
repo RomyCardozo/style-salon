@@ -40,7 +40,6 @@ export const MyTable = ({ columns, data, onRowUpdate, onRowDelete, onViewDetails
 										)}
 								</th>
 							))}
-							<th className="px-6 py-3"></th>
 						</tr>
 					))}
 				</thead>
@@ -58,30 +57,6 @@ export const MyTable = ({ columns, data, onRowUpdate, onRowDelete, onViewDetails
 									)}
 								</td>
 							))}
-							{/*<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-								<button
-									onClick={() => onRowUpdate(row.original)}
-									className="text-indigo-600 hover:text-indigo-900"
-								>
-									<CiEdit size={30} />
-								</button>
-								<button
-									onClick={() => onRowDelete(row.original)}
-									className="ml-4 text-red-600 hover:text-red-900"
-								>
-									<MdDeleteForever size={30} />
-								</button>
-								{
-									row.original.isSale && ( // Verifica si es una fila de ventas
-										<button
-											onClick={() => onViewDetails(row.original)}
-											className="ml-4 text-blue-600 hover:text-blue-900"
-										>
-											<FaEye  size={25} />
-										</button>
-									)
-								}
-							</td>*/}
 						</tr>
 					))}
 				</tbody>
