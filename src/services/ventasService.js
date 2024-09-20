@@ -2,7 +2,7 @@
 import api from './api';
 
 export const getSales = async () => {
-    const response = await api.get('/ventas');
+    const response = await api.get('ventas/listar');
     return response.data;
 };
 
