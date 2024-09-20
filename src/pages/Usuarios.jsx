@@ -1,161 +1,204 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MyTable } from "../components/MyTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Modal } from "../components/Modal";
 import { UsuariosForm } from "../components/form/UsuariosForm";
-const initialUsuarios = [
-	{
-        id: 1,
-        nombre: "Juan Pérez",
-        clave: "password123",
-        email: "juan.perez@example.com",
-        estado: "Activo",
-        rol: "Administrador"
-    },
-    {
-        id: 2,
-        nombre: "María Gómez",
-        clave: "securePass",
-        email: "maria.gomez@example.com",
-        estado: "Inactivo",
-        rol: "Usuario"
-    },
-    {
-        id: 3,
-        nombre: "Luis Martínez",
-        clave: "qwerty456",
-        email: "luis.martinez@example.com",
-        estado: "Activo",
-        rol: "Usuario"
-    },
-    {
-        id: 4,
-        nombre: "Ana Rodríguez",
-        clave: "ana2023",
-        email: "ana.rodriguez@example.com",
-        estado: "Activo",
-        rol: "Administrador"
-    },
-    {
-        id: 5,
-        nombre: "Carlos Hernández",
-        clave: "pass789",
-        email: "carlos.hernandez@example.com",
-        estado: "Inactivo",
-        rol: "Usuario"
-    },
-    {
-        id: 6,
-        nombre: "Elena Fernández",
-        clave: "elena321",
-        email: "elena.fernandez@example.com",
-        estado: "Activo",
-        rol: "Usuario"
-    },
-    {
-        id: 7,
-        nombre: "Pedro Sánchez",
-        clave: "pedro!#45",
-        email: "pedro.sanchez@example.com",
-        estado: "Inactivo",
-        rol: "Administrador"
-    },
-    {
-        id: 8,
-        nombre: "Lucía García",
-        clave: "lucia987",
-        email: "lucia.garcia@example.com",
-        estado: "Activo",
-        rol: "Usuario"
-    },
-    {
-        id: 9,
-        nombre: "Miguel Torres",
-        clave: "miguel000",
-        email: "miguel.torres@example.com",
-        estado: "Inactivo",
-        rol: "Administrador"
-    },
-    {
-        id: 10,
-        nombre: "Sofía López",
-        clave: "sofia456",
-        email: "sofia.lopez@example.com",
-        estado: "Activo",
-        rol: "Usuario"
-    }
-];
+import {
+    fetchUsuarios,
+    fetchRoles,
+    createUsuario,
+    updateUsuario,
+    deleteUsuario
+} from "../services/usuariosService";
+import { CiEdit } from "react-icons/ci";
+import { MdDeleteForever } from "react-icons/md";
+
 export const Usuarios = () => {
-	const [usuarios, setUsuarios] = useState(initialUsuarios);
-	const usuarioColumnHelper = createColumnHelper();
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [modalData, setModalData] = useState(null);
-	const [modalType, setModalType] = useState(null);
+    const [usuarios, setUsuarios] = useState([]);
+    const [roles, setRoles] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const usuarioColumnHelper = createColumnHelper();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalData, setModalData] = useState(null);
+    const [modalType, setModalType] = useState(null);
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+    const [usuarioToDelete, setUsuarioToDelete] = useState(null);
 
-	const openModal = (type, data = null) => {
-		setModalType(type);
-		setModalData(data);
-		setIsModalOpen(true);
-	};
+    useEffect(() => {
+        const loadUsuariosAndRoles = async () => {
+            try {
+                const [usuariosData, rolesData] = await Promise.all([
+                    fetchUsuarios(),
+                    fetchRoles()
+                ]);
+                const activeUsuarios = usuariosData.filter(usuario => usuario.estado === "Activo");
+                setUsuarios(activeUsuarios);
+                setRoles(rolesData);
+            } catch (error) {
+                console.error('Error loading usuarios and roles:', error);
+                setError('Error al cargar usuarios y roles. Por favor, intente de nuevo.');
+            } finally {
+                setLoading(false);
+            }
+        };
 
-	const closeModal = () => {
-		setIsModalOpen(false);
-		setModalData(null);
-	};
+        loadUsuariosAndRoles();
+    }, []);
 
-	const usuarioColumns = [
-		usuarioColumnHelper.accessor((row) => row.id, {
-			id: "id",
-			header: "ID",
-		}),
-		usuarioColumnHelper.accessor((row) => row.nombre, {
-			id: "nombre",
-			header: "Nombre",
-		}),
-		usuarioColumnHelper.accessor((row) => row.clave, {
-			id: "clave",
-			header: "Clave",
-		}),
-		usuarioColumnHelper.accessor((row) => row.email, {
-			id: "email",
-			header: "Email",
-		}),
-		usuarioColumnHelper.accessor((row) => row.estado, {
-			id: "estado",
-			header: "Estado",
-		}),
-		usuarioColumnHelper.accessor((row) => row.rol, {
-			id: "rol",
-			header: "Rol",
-		}),
-	];
+    const openModal = (type, data = null) => {
+        setModalType(type);
+        setModalData(data);
+        setIsModalOpen(true);
+    };
 
-	const handleUsuarioUpdate = (updatedUsuario) => {
-		// Lógica para actualizar usuario
-	};
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setModalData(null);
+    };
 
-	const handleUsuarioDelete = (usuarioToDelete) => {
-		setUsuarios(usuarios.filter((usuario) => usuario.id !== usuarioToDelete.id));
-	};
-	return (
-		<div>
-			<h1 className="text-2xl font-bold">Usuarios</h1>
-			{/* <UsuariosForm/>*/}
-			<div className="flex justify-end mb-4"><button className="bg-purple-500 hover:bg-purple-700
-			  text-white font-bold py-2 px-4 rounded">add usuario </button></div>
-			<MyTable
-				columns={usuarioColumns}
-				data={usuarios}
-				onRowUpdate={(row) => openModal("usuario", row)}
-				onRowDelete={(row) => handleUsuarioDelete(row)}
-			/>
+    const handleUsuarioCreate = async (newUsuario) => {
+        try {
+            // Asegúrate de que el rol sea un objeto con id y descripción
+            const rolObject = roles.find(rol => rol.id === parseInt(newUsuario.rol));
+            const usuarioToCreate = {
+                ...newUsuario,
+                rol: rolObject
+            };
+            const createdUsuario = await createUsuario(usuarioToCreate);
+            setUsuarios([...usuarios, createdUsuario]);
+            closeModal();
+        } catch (error) {
+            console.error('Error creating usuario:', error);
+            setError('Error al crear el usuario. Por favor, intente de nuevo.');
+        }
+    };
 
-			<Modal
-				isOpen={isModalOpen}
-				onClose={closeModal}
-				onSubmit={modalType === "usuario" ? handleUsuarioUpdate : ""}
-				initialValues={modalData}
-			/>
-		</div>
-	);
-}
+
+    const handleUsuarioUpdate = async (updatedUsuario) => {
+        try {
+            // Asegúrate de que el rol sea un objeto con id y descripción
+            const rolObject = roles.find(rol => rol.id === parseInt(updatedUsuario.rol));
+            const usuarioToUpdate = {
+                ...updatedUsuario,
+                rol: rolObject
+            };
+            const updatedUser = await updateUsuario(usuarioToUpdate.id, usuarioToUpdate);
+            setUsuarios(usuarios.map(usuario =>
+                usuario.id === updatedUser.id ? updatedUser : usuario
+            ));
+            closeModal();
+        } catch (error) {
+            console.error('Error updating usuario:', error);
+            setError('Error al actualizar el usuario. Por favor, intente de nuevo.');
+        }
+    };
+
+
+    const openDeleteConfirm = (usuario) => {
+        setUsuarioToDelete(usuario);
+        setIsConfirmOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        try {
+            await deleteUsuario(usuarioToDelete.id);
+            setUsuarios(usuarios.filter(usuario => usuario.id !== usuarioToDelete.id));
+            setIsConfirmOpen(false);
+        } catch (error) {
+            console.error('Error deleting usuario:', error);
+            setError('Error al eliminar el usuario. Por favor, intente de nuevo.');
+        }
+    };
+
+    const usuarioColumns = [
+        usuarioColumnHelper.accessor("id", {
+            header: "ID",
+        }),
+        usuarioColumnHelper.accessor("nombre", {
+            header: "Nombre",
+        }),
+        usuarioColumnHelper.accessor("email", {
+            header: "Email",
+        }),
+        usuarioColumnHelper.accessor("rol.descripcion", {
+            header: "Rol",
+        }),
+        usuarioColumnHelper.accessor("estado", {
+            header: "Estado",
+        }),
+        usuarioColumnHelper.display({
+            id: 'actions',
+            header: 'Acciones',
+            cell: ({ row }) => (
+                <div className="flex space-x-4">
+                    <button
+                        onClick={() => openModal("edit", row.original)}
+                        className="text-blue-500 hover:text-blue-700"
+                    >
+                        <CiEdit size={30} />
+                    </button>
+                    <button
+                        onClick={() => openDeleteConfirm(row.original)}
+                        className="text-red-500 hover:text-red-700"
+                    >
+                        <MdDeleteForever size={30} />
+                    </button>
+                </div>
+            ),
+        }),
+    ];
+
+    if (loading) return <div>Cargando usuarios...</div>;
+    if (error) return <div className="text-red-500">{error}</div>;
+
+    return (
+        <div>
+            <h1 className="text-2xl font-bold mb-4">Usuarios</h1>
+            <div className="flex justify-end mb-4">
+                <button
+                    onClick={() => openModal("create")}
+                    className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+                >
+                    Agregar Usuario
+                </button>
+            </div>
+            <MyTable columns={usuarioColumns} data={usuarios} />
+
+            <Modal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+            >
+                <UsuariosForm
+                    initialValues={modalData}
+                    modalType={modalType}
+                    roles={roles}
+                    onSubmit={modalType === "create" ? handleUsuarioCreate : handleUsuarioUpdate}
+                    onCancel={closeModal}
+                />
+            </Modal>
+
+            {isConfirmOpen && (
+                <Modal isOpen={isConfirmOpen} onClose={() => setIsConfirmOpen(false)}>
+                    <div className="p-2 flex flex-col items-center text-center">
+                        <h2 className="text-xl font-bold mb-4">¿Estás seguro que deseas eliminar este usuario?</h2>
+                        <div className="flex justify-end space-x-4">
+                            <button
+                                onClick={() => setIsConfirmOpen(false)}
+                                className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={confirmDelete}
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                            >
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </Modal>
+            )}
+        </div>
+    );
+};
