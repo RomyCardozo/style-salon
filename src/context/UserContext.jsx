@@ -1,10 +1,11 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import {
-	getUsers,
-	addUser as addUserService,
-	updateUser as updateUserService,
-	deleteUser as deleteUserService,
-} from "../services/userService";
+	fetchUsuarios as getUsers,
+	createUsuario as addUserService,
+	updateUsuario as updateUserService,
+	deleteUsuario as deleteUserService,
+	
+} from "../services/usuariosService";
 
 const UserContext = createContext();
 
