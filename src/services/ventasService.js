@@ -1,22 +1,56 @@
-// src/services/salesService.js
+// src/services/ventasService.js
 import api from './api';
 
-export const getSales = async () => {
+// Obtener todas las ventas
+export const getVentas = async () => {
     const response = await api.get('ventas/listar');
     return response.data;
 };
 
-export const addSale = async (sale) => {
-    const response = await api.post('/ventas', sale);
+
+
+// Agregar una nueva venta
+export const addVenta = async (venta) => {
+    const response = await api.post('ventas/guardar1', venta);
+    return response.data.venta;
+};
+
+// Actualizar una venta existente
+export const updateVenta = async (id, venta) => {
+    const response = await api.put(`ventas/editar2/${id}`, venta);
     return response.data;
 };
 
-export const updateSale = async (saleId, sale) => {
-    const response = await api.put(`/ventas/${id}`, sale);
-    return response.data;
+// Soft delete (marcar como inactiva) una venta
+export const softDeleteVenta = async (id) => {
+    try {
+        const response = await api.put(`ventas/eliminar/${id}`, { estado: 'Inactivo' });
+        return response.data;
+    } catch (error) {
+        console.error("Error al marcar la venta como inactiva:", error);
+        throw error;
+    }
 };
 
-export const deleteSale = async (saleId) => {
-    const response = await api.delete(`/ventas/${id}`);
-    return response.data;
+export const getVentaDetalles = async (id) => {
+    try {
+        const response = await api.get(`ventaDetalle/listard/${id}`);
+        console.log("lista",response.data);
+        if (response.status === 204 || !response.data) {
+            return { detalles: [], clienteNombre: '', fechaVenta: '' }; // Maneja el caso cuando no hay datos
+        }
+        
+        // Retorna un objeto con los detalles de la venta, el nombre del cliente y la fecha
+        return {
+            detalles: response.data.detalles,
+            clienteNombre: response.data.clienteNombre,
+            fechaVenta: response.data.fechaVenta
+        };
+
+        
+    } catch (error) {
+        console.error("Error fetching venta detalles", error);
+        throw error;
+    }
+ 
 };
