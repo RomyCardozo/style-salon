@@ -1,73 +1,75 @@
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { useState } from "react";
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../context/AuthContext"
 
+export function Login() {
+  const { authenticate, loginLoading, loginError } = useAuth()
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const navigate = useNavigate()
 
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    await authenticate(username, password)
+    navigate("/home/clientes")
+  }
 
-export const Login = () => {
-	const { authenticate, loginLoading, loginError } = useAuth();
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
-
-	const navigate = useNavigate()
-
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		await authenticate(username, password);
-		navigate("/home/clientes");
-	};
-    return (
-        <section className=" h-screen flex flex-col md:flex-row justify-center space-y-10 md:space-y-0 md:space-x-16 items-center my-2 mx-5 md:mx-0 md:my-0 ">
-            <div className="md:w-1/3 max-w-sm animate-pulse">
-                <img
-                    src="/Logo2Salon.jpg"
-                    alt="Imagen de muestra"
-                />
-            </div>
-            <div className="md:w-1/3 max-w-sm">
-                <input
-                    className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded"
-                    type="text"
-					value={username}
-					onChange={(e) => setUsername(e.target.value)}
-					placeholder="Usuario"
-					required
-                />
-                <input
-                    className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded mt-4"
-                    type="password"
-					placeholder="Contraseña"
-					value={password}
-					onChange={(e) => setPassword(e.target.value)}
-					required
-                />
-               {/*} <div className="mt-4 flex justify-between font-semibold text-sm">
-                    <label className="flex text-slate-500 hover:text-slate-600 cursor-pointer">
-                        <input className="mr-1" type="checkbox" />
-                        <span>Recuérdame</span>
-                    </label>
-                    <a
-                        className="text-purple-600 hover:text-purple-700 hover:underline hover:underline-offset-4"
-                        href="#"
-                    >
-                        ¿Olvidaste tu Contraseña?
-                    </a>
-                </div> */}
-                <div className="text-center md:text-left">
-                    <button
-                    disabled={loginLoading}
-                    onClick={handleSubmit}
-                        className="mt-4 bg-purple-600 hover:bg-purple-400 px-4 py-2 text-white uppercase rounded text-xs tracking-wider"
-                       type="submit"
-                       
-                    >
-                        Iniciar Sesión
-                    </button>
-                    {loginError && (
-						<p className="text-sm text-red-600">{loginError}</p>
-					)}
-                </div>
-            </div>
-        </section>
-    );
-};
+  return (
+    <div className=" w-screen min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 via-purple-300 to-purple-500">
+      <div className="bg-white/90 p-8 rounded-lg shadow-2xl backdrop-blur-sm w-full max-w-md">
+        <div className="mb-8 text-center ">
+          <img
+            src="/Logo2Salon.jpg"
+            alt="Logo del Salón"
+            className="w-32 h-32 mx-auto rounded-full border-4 border-purple-500 shadow-lg animate-pulse"
+          />
+          <h2 className="mt-4 text-2xl font-bold text-purple-800 ">Bienvenido a tu Salón</h2>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              Usuario
+            </label>
+            <input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+             // required
+              className="  mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+              placeholder="Tu nombre de usuario"
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Contraseña
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+             // required
+              className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+              placeholder="Tu contraseña"
+            />
+          </div>
+          <div>
+            <button
+              type="submit"
+              disabled={loginLoading}
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-150 ease-in-out"
+            >
+              {loginLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
+            </button>
+          </div>
+        </form>
+        
+        {loginError && (
+          <p className="mt-4 text-sm text-red-600 text-center">{loginError}</p>
+        )}
+      </div>
+    </div>
+  )
+}
