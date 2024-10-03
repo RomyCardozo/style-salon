@@ -1,8 +1,5 @@
-// Table.jsx
-import React from "react";
-import { MdDeleteForever } from "react-icons/md";
-import { CiEdit } from "react-icons/ci";
-import { FaEye } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import {
 	useReactTable,
 	flexRender,
@@ -10,9 +7,11 @@ import {
 	getPaginationRowModel,
 	getSortedRowModel,
 } from "@tanstack/react-table";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export const MyTable = ({ columns, data, onRowUpdate, onRowDelete, onViewDetails }) => {
+	// Estado para manejar la animación de las filas
+	const [isVisible, setIsVisible] = useState(false);
+
 	const table = useReactTable({
 		data,
 		columns,
@@ -21,10 +20,15 @@ export const MyTable = ({ columns, data, onRowUpdate, onRowDelete, onViewDetails
 		getSortedRowModel: getSortedRowModel(),
 	});
 
+	// Al montar el componente, activar la animación
+	useEffect(() => {
+		setIsVisible(true); // Activa la animación cuando el componente se monta
+	}, []);
+
 	return (
 		<div className="overflow-x-auto rounded-lg">
-			<table className="min-w-full divide-y divide-gray-200 ">
-				<thead className="bg-gray-50">
+			<table className="min-w-full divide-y divide-gray-200  ">
+				<thead className="bg-purple-200">
 					{table.getHeaderGroups().map((headerGroup) => (
 						<tr key={headerGroup.id}>
 							{headerGroup.headers.map((header) => (
@@ -44,8 +48,16 @@ export const MyTable = ({ columns, data, onRowUpdate, onRowDelete, onViewDetails
 					))}
 				</thead>
 				<tbody className="bg-white divide-y divide-gray-200">
-					{table.getRowModel().rows.map((row) => (
-						<tr key={row.id}>
+					{table.getRowModel().rows.map((row, index) => (
+						<tr
+							
+							key={row.id}
+							// Aplica la animación solo si es visible
+							className={`transition hover:bg-purple-100 ${
+								isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+							}`}
+							style={{ transitionDelay: `${index * 100}ms` }} // Añade un pequeño retraso para que las filas entren en secuencia
+						>
 							{row.getVisibleCells().map((cell) => (
 								<td
 									key={cell.id}
