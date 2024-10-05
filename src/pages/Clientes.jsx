@@ -110,9 +110,9 @@ export const Clientes = () => {
         clientColumnHelper.accessor("telefono", {
             header: "Telefono",
         }),
-        clientColumnHelper.accessor("estado", {
+       /* clientColumnHelper.accessor("estado", {
             header: "Estado",
-        }),
+        }),*/
         clientColumnHelper.display({
             id: 'actions',
             header: 'Acciones',

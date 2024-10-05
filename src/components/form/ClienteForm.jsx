@@ -84,7 +84,7 @@ export const ClienteForm = ({ onSubmit, initialValues, modalType }) => {
 				{errors.telefono && <span className="text-red-500 text-sm">{errors.telefono.message}</span>}
 			</div>
 
-			<div className="mb-4">
+			{/*<div className="mb-4">
 				<label className="block text-gray-700">Estado</label>
 				<select
 					{...register("estado", { required: "El estado es obligatorio" })}
@@ -94,7 +94,7 @@ export const ClienteForm = ({ onSubmit, initialValues, modalType }) => {
 					<option value="Inactivo">Inactivo</option>
 				</select>
 				{errors.estado && <span className="text-red-500 text-sm">{errors.estado.message}</span>}
-			</div>
+			</div>*/}
 
 			<button
 				type="submit"
