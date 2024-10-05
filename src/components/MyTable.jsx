@@ -53,7 +53,7 @@ export const MyTable = ({ columns, data, onRowUpdate, onRowDelete, onViewDetails
 							
 							key={row.id}
 							// Aplica la animación solo si es visible
-							className={`transition hover:bg-purple-100 ${
+							className={`transition-opacity duration-500 ease-out transform hover:bg-purple-100 ${
 								isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
 							}`}
 							style={{ transitionDelay: `${index * 100}ms` }} // Añade un pequeño retraso para que las filas entren en secuencia
