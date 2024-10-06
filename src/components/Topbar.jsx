@@ -1,17 +1,22 @@
 import { useState } from "react";
 import { FaBell, FaCaretDown, FaSearch } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom'; // Importamos useNavigate
+import { useAuth } from "../context/AuthContext";
+
 
 export const Topbar = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
+	const { user, loading, logout } = useAuth();
+	console.log("este es el user/n"+user);
+	const navigate = useNavigate();
 
 	const toggleDropdown = () => {
 		setDropdownOpen(!dropdownOpen);
 	};
 
 	const handleLogout = () => {
-
-		// Aquí puedes agregar la lógica para cerrar sesión
-		console.log("Logout clicked");
+	logout();
+	navigate('/');
 	};
 	return (
 		<div className="right-0  text-white h-16 z-10 w-full bg-gradient-to-r from-purple-100 via-purple-300 	 to-purple-100 shadow p-4 flex justify-between items-center fixed top-0 left-0">
@@ -21,7 +26,7 @@ export const Topbar = () => {
 					alt="Profile"
 					className="w-10 h-10 rounded-full"
 				/>
-				<span className="ml-2 font-medium text-black">Victoria</span>
+				<span className="ml-2 font-medium text-black">{user?.nombre}</span>
 				<button onClick={toggleDropdown} className="ml-2 text-gray-600">
 					<FaCaretDown />
 				</button>
