@@ -1,9 +1,9 @@
 import { Login } from "../../components/Login";
 
-export const LoginPage = ({ setIsLoggedIn }) => {
+export const LoginPage = () => {
 	return(
 	<div className="mx-auto">
-		<Login setIsLoggedIn={setIsLoggedIn} />;
+		<Login/>
 	</div>
 	);
 };
