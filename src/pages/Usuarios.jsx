@@ -59,6 +59,17 @@ export const Usuarios = () => {
 
     const handleUsuarioCreate = async (newUsuario) => {
         try {
+            //verifica que el usuario no sea repetido
+            const existingUsuario = usuarios.find(
+                (usuario) => usuario.nombre === newUsuario.nombre       
+            );
+            if (existingUsuario) {
+
+
+                setError('El usuario ya existe. Por favor, elija otro nombre.');
+                return;
+
+            }
             // Asegúrate de que el rol sea un objeto con id y descripción
             const rolObject = roles.find(rol => rol.id === parseInt(newUsuario.rol));
             const usuarioToCreate = {
