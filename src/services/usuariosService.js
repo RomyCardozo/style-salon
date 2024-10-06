@@ -38,7 +38,7 @@ export const fetchUsuarioById = async (id) => {
 // Agregar un nuevo servicio
 export const createUsuario = async (usuario) => {
     try {
-        const response = await api.post('usuario/guardar', usuario);
+        const response = await api.post('auth/register', usuario);
         return response.data.Usuario;
     } catch (error) {
         console.error('Error creating usuario:', error);
