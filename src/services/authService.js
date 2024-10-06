@@ -1,4 +1,4 @@
-import api from './api';
+
 
 {/*export const login = async (username, password) => {
     try {
@@ -38,8 +38,9 @@ export const refreshSession = async (refreshToken) => {
     }
 };*/}
 
-// src/services/authService.js
-
+import axios from 'axios';
+// src/services/authService.js 
+/* 
 export const login = async (username, password) => {
     // Simula un inicio de sesión exitoso con un usuario y token ficticios
     return new Promise((resolve) => {
@@ -69,4 +70,62 @@ export const refreshSession = async (refreshToken) => {
             resolve({ token: "new-fake-token" });
         }, 1000); // Simula un retraso en la respuesta
     });
+}; */
+
+import api from './api';
+
+export const login = async (username, password) => {
+    try {
+        const response = await axios.post("http://localhost:8080/auth/login", {
+            username, password,
+        })
+        return response.data;
+    } catch (error) {
+        const status = error.response?.status;
+        const errorMessage = error.response?.data?.message || error.message;
+
+        // Maneja el código de estado 401 para mostrar un mensaje más amigable
+        if (status === 401) {
+            throw new Error("Nombre de usuario o contraseña incorrectos. Inténtalo de nuevo.");
+        } else if (errorMessage.includes("User not found")) {
+            throw new Error("El nombre de usuario no existe.");
+        } else if (errorMessage.includes("Invalid password")) {
+            throw new Error("La contraseña es incorrecta. Inténtalo de nuevo.");
+        } else {
+            throw new Error("Hubo un problema al iniciar sesión. Por favor, inténtalo de nuevo más tarde.");
+        }
+    }
 };
+
+
+
+export const getCurrentUser = async (token) => {
+    const response = await fetch("http://localhost:8080/auth/currentUser", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    console.log("Response:", response); // Muestra la respuesta completa en la consola
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch user");
+    }
+
+    return await response.json();
+};
+
+export const refreshSession = async (refreshToken) => {
+    const response = await axios.post(`auth/refresh`, {
+        refreshToken,
+    });
+
+    return response.data; 
+};
+
+/*const logout = () => {
+    localStorage.removeItem("accessToken"); // Eliminar el access token guardado
+    localStorage.removeItem("refreshToken"); // Eliminar el refresh token guardado
+    window.location.href = "/"; // Redirigir a la página de login
+};*/
