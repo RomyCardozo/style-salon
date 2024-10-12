@@ -15,7 +15,7 @@ export const ServiciosForm = ({ onSubmit, initialValues, modalType }) => {
             nombre: "",
             descripcion: "",
             precio: "",
-            estado: ""
+            estado: "Activo"
         }
     });
 
@@ -67,7 +67,7 @@ export const ServiciosForm = ({ onSubmit, initialValues, modalType }) => {
                 />
                 {errors.precio && <span className="text-red-500 text-sm">Este campo es requerido y debe ser un número positivo</span>}
             </div>
-            <div className="mb-4">
+           {/*  <div className="mb-4">
                 <label className="block text-gray-700">Estado</label>
                 <select
                     {...register("estado", { required: true })}
@@ -78,6 +78,7 @@ export const ServiciosForm = ({ onSubmit, initialValues, modalType }) => {
                 </select>
                 {errors.estado && <span className="text-red-500 text-sm">Este campo es requerido</span>}
             </div>
+            */}
             <button
                 type="submit"
                 className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded"

@@ -128,7 +128,7 @@ export const VentaForm = ({ onSubmit, initialValues, modalType }) => {
                         className={`mt-1 p-2 w-full border rounded ${errors.total ? 'border-red-500' : 'border-gray-300'}`}
                     />
                     {errors.total && <span className="text-red-500 text-sm">{errors.total.message}</span>}
-                </div>*/}
+                </div>*/}{/*
                 <div className="mb-4">
                     <label className="block text-gray-700">Estado</label>
                     <select
@@ -139,7 +139,7 @@ export const VentaForm = ({ onSubmit, initialValues, modalType }) => {
                         <option value="Inactivo">Inactivo</option>
                     </select>
                     {errors.estado && <span className="text-red-500 text-sm">{errors.estado.message}</span>}
-                </div>
+                </div>*/}
                 <div className="mb-4">
                     <label className="block text-gray-700">Usuario</label>
                     <Controller

@@ -114,9 +114,9 @@ export const Venta = () => {
         columnHelper.accessor("total", {
             header: "Total",
         }),
-        columnHelper.accessor("estado", {
+       /* columnHelper.accessor("estado", {
             header: "Estado",
-        }),
+        }),*/
         columnHelper.display({
             id: 'actions',
             header: 'Acciones',

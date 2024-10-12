@@ -74,7 +74,7 @@ export const UsuariosForm = ({ onSubmit, initialValues, roles, modalType }) => {
                 />
                 {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
             </div>
-            <div className="mb-4">
+           {/*  <div className="mb-4">
                 <label className="block text-gray-700">Estado</label>
                 <select
                     {...register("estado", { required: "Este campo es requerido" })}
@@ -84,7 +84,7 @@ export const UsuariosForm = ({ onSubmit, initialValues, roles, modalType }) => {
                     <option value="Inactivo">Inactivo</option>
                 </select>
                 {errors.estado && <span className="text-red-500 text-sm">{errors.estado.message}</span>}
-            </div>
+            </div>*/}
             <div className="mb-4">
                 <label className="block text-gray-700">Rol</label>
                 <select

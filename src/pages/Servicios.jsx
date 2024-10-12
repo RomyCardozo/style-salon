@@ -116,9 +116,9 @@ export const Servicios = () => {
             header: "Precio",
             cell: info => `$${info.getValue().toLocaleString()}`,
         }),
-        servicioColumnHelper.accessor("estado", { //este ver si es necesario que se vea o que se edite
+      /*  servicioColumnHelper.accessor("estado", { //este ver si es necesario que se vea o que se edite
             header: "Estado",
-        }),
+        }),*/
         servicioColumnHelper.display({
             id: 'actions',
             header: 'Acciones',
