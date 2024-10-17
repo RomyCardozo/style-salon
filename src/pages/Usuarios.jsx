@@ -82,6 +82,7 @@ export const Usuarios = () => {
         } catch (error) {
             console.error('Error creating usuario:', error);
             setError('Error al crear el usuario. Por favor, intente de nuevo.');
+            throw error;
         }
     };
 
@@ -135,9 +136,9 @@ export const Usuarios = () => {
         usuarioColumnHelper.accessor("rol.descripcion", {
             header: "Rol",
         }),
-        usuarioColumnHelper.accessor("estado", {
+       /* usuarioColumnHelper.accessor("estado", {
             header: "Estado",
-        }),
+        }),*/
         usuarioColumnHelper.display({
             id: 'actions',
             header: 'Acciones',
