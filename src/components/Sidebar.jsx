@@ -7,20 +7,12 @@ import {
 	FaUser,
 	FaShoppingCart,
 	FaChartBar,
-	FaCog
+	FaCog,
+	FaUserCircle,
 } from "react-icons/fa";
 import { GiHairStrands } from "react-icons/gi";
 import { useLocation } from "react-router-dom";
 
-/*const menuItems = [
-	{ icon: <FaUsers />, title: "Clientes", link: "/home/clientes" },
-	{ icon: <GiHairStrands />, title: "Servicios", link: "/home/servicios" },
-	{ icon: <FaUser />, title: "Usuarios", link: "/home/usuarios" },
-	{ icon: <FaShoppingCart />, title: "Venta", link: "/home/venta" },
-	{ icon: <FaChartBar />, title: "Informes", link: "/home/informes" },
-	{ icon: <FaCog />, title: "Configuración", link: "/home/configuracion" },
-	//{ icon: <FaUserCircle />, title: "Perfil", link: "/home/perfil" },
-];*/
 export const Sidebar = () => {
   const location = useLocation();
   const { user } = useAuth(); // Accede al contexto
@@ -32,7 +24,8 @@ export const Sidebar = () => {
 	  user?.rol?.descripcion === 'Administrador' ? { icon: <FaUser />, title: 'Usuarios', link: '/home/usuarios' } : null,
 	  { icon: <FaShoppingCart />, title: 'Venta', link: '/home/venta' },
 	  { icon: <FaChartBar />, title: 'Informes', link: '/home/informes' },
-	  { icon: <FaCog />, title: 'Configuración', link: '/home/configuracion' },
+	//  { icon: <FaCog />, title: 'Configuración', link: '/home/configuracion' },
+	//  { icon: <FaUserCircle />, title: "Perfil", link: "/home/perfil" },
   ].filter(Boolean); 
 
 	return (
