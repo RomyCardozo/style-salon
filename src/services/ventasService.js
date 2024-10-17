@@ -54,3 +54,28 @@ export const getVentaDetalles = async (id) => {
     }
  
 };
+
+// Obtener ventas por rango de fechas
+export const getVentasByDateRange = async (startDate, endDate) => {
+    const response = await api.get(`/informes/ventas`, {
+        params: {
+            startDate,
+            endDate,
+        },
+    });
+   // console.log(response.data); 
+    return response.data;
+};
+
+// Obtener resumen de servicios por rango de fechas
+export const getServiciosByDateRange = async (startDate, endDate) => {
+    const response = await api.get(`/informes/servicios`, {
+        params: {
+            startDate,
+            endDate,
+        },
+    });
+    console.log(response.data); 
+    return response.data;
+};
+
