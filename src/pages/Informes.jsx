@@ -1,13 +1,7 @@
-import React, { useState } from 'react'
-import DatePicker from 'react-datepicker'
-import "react-datepicker/dist/react-datepicker.css"
-
-// Datos de ejemplo (reemplazar con tu lógica real de obtención de datos)
-const sampleData = [
-  { id: 1, client: 'Sara', service: 'Corte de pelo', total: 35 },
-  { id: 2, client: 'Romi', service: 'Tinte', total: 80 },
-  { id: 3, client: 'Sofia', service: 'Peinado', total: 50 },
-]
+import React, { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
+import { getVentasByDateRange, getServiciosByDateRange } from '../services/ventasService';
 
 const SalesReport = ({ data, startDate, endDate }) => (
   <div className="bg-white p-8 rounded-lg shadow-md print:shadow-none print:p-0">
@@ -26,23 +20,27 @@ const SalesReport = ({ data, startDate, endDate }) => (
         {data.map((row) => (
           <tr key={row.id}>
             <td className="border border-purple-200 p-2">{row.id}</td>
-            <td className="border border-purple-200 p-2">{row.client}</td>
-            <td className="border border-purple-200 p-2">{row.service}</td>
+            <td className="border border-purple-200 p-2">{row.cliente.nombre} {row.cliente.apellido}</td>
+            <td className="border border-purple-200 p-2">
+              {row.detalles.length > 0 ? row.detalles[0].servicio.nombre : "Servicio no disponible"}
+            </td>
             <td className="border border-purple-200 p-2">{row.total}</td>
           </tr>
         ))}
       </tbody>
     </table>
   </div>
-)
+);
+
 
 const ServicesReport = ({ data, startDate, endDate }) => {
+  // Reducir los datos para agrupar servicios
   const servicesSummary = data.reduce((acc, curr) => {
-    if (!acc[curr.service]) acc[curr.service] = { count: 0, total: 0 };
-    acc[curr.service].count++;
-    acc[curr.service].total += curr.total;
+    if (!acc[curr.nombre]) acc[curr.nombre] = { cantidad: 0, total: 0 };
+    acc[curr.nombre].cantidad += curr.cantidad; // Sumar cantidades
+    acc[curr.nombre].total += curr.total; // Sumar totales
     return acc;
-  }, {})
+  }, {});
 
   return (
     <div className="bg-white p-8 rounded-lg shadow-md print:shadow-none print:p-0">
@@ -57,38 +55,52 @@ const ServicesReport = ({ data, startDate, endDate }) => {
           </tr>
         </thead>
         <tbody>
-          {Object.entries(servicesSummary).map(([service, { count, total }]) => (
-            <tr key={service}>
-              <td className="border border-purple-200 p-2">{service}</td>
-              <td className="border border-purple-200 p-2">{count}</td>
-              <td className="border border-purple-200 p-2">{total}</td>
+          {data.map((service, index) => (
+            <tr key={index}>
+              <td className="border border-purple-200 p-2">{service.nombre}</td> {/* Nombre del servicio */}
+              <td className="border border-purple-200 p-2">{service.cantidad}</td> {/* Cantidad */}
+              <td className="border border-purple-200 p-2">{service.total}</td> {/* Ingreso Total */}
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-  )
-}
+  );
+};
 
 export function Informes() {
-  const [reportType, setReportType] = useState('sales')
-  const [startDate, setStartDate] = useState(new Date())
-  const [endDate, setEndDate] = useState(new Date())
-  const [reportData, setReportData] = useState(null)
+  const [reportType, setReportType] = useState('sales');
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [reportData, setReportData] = useState(null);
+  const handleGenerateReport = async () => {
+    try {
+      let data;
+      const startDateTime = `${startDate.toISOString().split('T')[0]}T00:00:00`;
+      const endDateTime = `${endDate.toISOString().split('T')[0]}T23:59:59`;
 
-  const handleGenerateReport = () => {
-    // Aquí iría la lógica para obtener los datos reales del informe
-    // Por ahora, usamos los datos de ejemplo
-    setReportData(sampleData)
-  }
+      if (reportType === 'sales') {
+        data = await getVentasByDateRange(startDateTime, endDateTime);
+      } else {
+        data = await getServiciosByDateRange(startDateTime, endDateTime);
+      }
+      console.log("Datos del informe:", data); // Imprimir los datos recibidos
+      setReportData(data);
+    } catch (error) {
+      console.error("Error al generar el informe:", error);
+      alert('No se pudieron obtener los datos del informe.');
+    }
+  };
 
   const handlePrintReport = () => {
     if (reportData) {
-      window.print()
+      window.print();
+      //captura solo los datos del reporte
+
     } else {
-      alert('Por favor, genera un informe primero.')
+      alert('Por favor, genera un informe primero.');
     }
-  }
+  };
 
   return (
     <div className="p-6 bg-purple-100 min-h-screen print:bg-white print:p-0">
@@ -108,12 +120,14 @@ export function Informes() {
             onChange={(date) => setStartDate(date)}
             placeholderText="Fecha de inicio"
             className="w-48 p-2 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+            dateFormat="yyyy-MM-dd" // Solo mostrar la fecha
           />
           <DatePicker
             selected={endDate}
             onChange={(date) => setEndDate(date)}
             placeholderText="Fecha de fin"
             className="w-48 p-2 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+            dateFormat="yyyy-MM-dd" // Solo mostrar la fecha
           />
         </div>
         <div className="space-x-4">
@@ -132,22 +146,22 @@ export function Informes() {
         </div>
       </div>
       {reportData && (
-        <div className="mt-8 print:mt-0">
+        <div className="mt-8 print:mt-0 printable ">
           {reportType === 'sales' ? (
-            <SalesReport 
-              data={reportData} 
-              startDate={startDate.toDateString()} 
-              endDate={endDate.toDateString()} 
+            <SalesReport
+              data={reportData}
+              startDate={startDate.toLocaleDateString()}
+              endDate={endDate.toLocaleDateString()}
             />
           ) : (
-            <ServicesReport 
-              data={reportData} 
-              startDate={startDate.toDateString()} 
-              endDate={endDate.toDateString()} 
+            <ServicesReport
+              data={reportData}
+              startDate={startDate.toLocaleDateString()}
+              endDate={endDate.toLocaleDateString()}
             />
           )}
         </div>
       )}
     </div>
-  )
+  );
 }
