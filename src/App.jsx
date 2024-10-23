@@ -2,6 +2,8 @@ import { Route, Routes } from "react-router-dom";
 // pages
 import { Home } from "./pages";
 import { LoginPage } from "./pages/auth/LoginPage";
+import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from 'react-toastify';
 
 import { PrivateRoutes } from "./routes/PrivateRoutes";
 import { PublicRoutes } from "./routes/PublicRoutes";
@@ -50,6 +52,7 @@ function App() {
 					</SalesProvider>
 				</UserProvider>
 			</AuthProvider>
+			<ToastContainer />
 		</div>
 	);
 }
