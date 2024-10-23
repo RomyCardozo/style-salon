@@ -12,6 +12,7 @@ import {
 
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteForever } from "react-icons/md";
+import { notifyError, notifySuccess } from "../utils/notificaciones";
 
 export const Clientes = () => {
     const [clients, setClients] = useState([]);
@@ -30,9 +31,11 @@ export const Clientes = () => {
                 const data = await fetchClientes();
                 const activeClients = data.filter(cliente => cliente.estado === "Activo"); // Filtrar solo los clientes activos
                 setClients(activeClients);
+                
+                
             } catch (error) {
                 console.error('Error loading clients:', error);
-                setError('Error loading clients');
+                notifyError('Error cargando clientes. Por favor, intente de nuevo.');
             } finally {
                 setLoading(false);
             }
@@ -57,9 +60,10 @@ export const Clientes = () => {
             const createdClient = await createCliente(newClient);
             setClients([...clients, createdClient]);
             closeModal();
+            notifySuccess('Cliente registrado exitosamente.');
         } catch (error) {
             console.error('Error creating client:', error);
-            setError('Error creating client');
+            notifyError('Error creando cliente');
         }
     };
 
@@ -70,9 +74,10 @@ export const Clientes = () => {
                 client.id === updated.id ? updated : client
             ));
             closeModal();
+            notifySuccess('Cliente actualizado exitosamente.');
         } catch (error) {
             console.error('Error updating client:', error);
-            setError('Error updating client');
+            notifyError('Error actualizando cliente');
         }
     };
 
@@ -86,11 +91,12 @@ export const Clientes = () => {
     const confirmDelete = async () => {
         try {
             await deleteCliente(clientToDelete.id); // Llama al backend para hacer el soft delete
+            notifySuccess('Cliente eliminado exitosamente.');
             setClients(clients.filter(client => client.id !== clientToDelete.id)); // Filtra el cliente eliminado de la lista
             setIsConfirmOpen(false); // Cierra el modal de confirmación
         } catch (error) {
             console.error('Error deleting client:', error);
-            setError('Error deleting client');
+            notifyError('Error deleting client');
         }
     };
 

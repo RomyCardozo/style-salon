@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactToPrint from "react-to-print";
 import { useNavigate, useParams } from "react-router-dom";
 import { getVentaDetalles } from "../services/ventasService";
+import { notifyError } from "../utils/notificaciones";
 
 export const DetalleVenta = () => {
     const { id } = useParams();
@@ -23,7 +24,7 @@ export const DetalleVenta = () => {
                 setFechaVenta(fetchedSale.fechaVenta); // Asigna la fecha de la venta
             } catch (err) {
                 console.error("Error al cargar los detalles de la venta:", err);
-                setError("No se pudieron cargar los detalles de la venta. Por favor, intente más tarde.");
+                notifyError("No se pudieron cargar los detalles de la venta. Por favor, intente más tarde.");
             } finally {
                 setLoading(false);
             }
@@ -32,7 +33,7 @@ export const DetalleVenta = () => {
     }, [id]);
 
     if (loading) return <div>Cargando...</div>;
-    if (error) return <div>{error}</div>;
+   // if (error) return <div>{error}</div>;
     if (!sale || sale.length === 0) return <div>No se encontraron detalles para esta venta.</div>;
 
     return (
@@ -40,7 +41,7 @@ export const DetalleVenta = () => {
             <h1 className="mb-4 text-2xl font-bold">
                 Detalle de la Venta #{id}
             </h1>
-            <div ref={printRef}>
+            <div className="printable" ref={printRef}>
                 <div className="mb-4">
                     <h2 className="text-lg font-semibold">
                         Cliente: {clienteNombre}

@@ -11,6 +11,8 @@ import {
 } from "../services/servicioService";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteForever } from "react-icons/md";
+import { Bounce, toast } from "react-toastify";
+import { notifyError, notifySuccess } from "../utils/notificaciones";
 
 export const Servicios = () => {
     const [servicios, setServicios] = useState([]);
@@ -31,7 +33,7 @@ export const Servicios = () => {
                 setServicios(activeServices);
             } catch (error) {
                 console.error('Error loading servicios:', error);
-                setError('Error loading services');
+                notifyError('Error cargando servicios. Por favor, intente de nuevo.');
             } finally {
                 setLoading(false);
             }
@@ -51,14 +53,16 @@ export const Servicios = () => {
         setModalData(null);
     };
 
+
     const handleServiceCreate = async (newService) => {
         try {
             const createdService = await createServicio(newService);
             setServicios([...servicios, createdService]);
             closeModal();
+            notifySuccess('Servicio creado exitosamente');
         } catch (error) {
             console.error('Error creating servicio:', error);
-            setError('Error creating service');
+            notifyError('Error creando servicio');
         }
     };
 
@@ -69,9 +73,10 @@ export const Servicios = () => {
                 servicio.id === updatedServicio.id ? updatedServicio : servicio
             ));
             closeModal();
+            notifySuccess('Servicio actualizado exitosamente');
         } catch (error) {
             console.error('Error updating servicio:', error);
-            setError('Error updating service');
+            notifyError('Error actualizando servicio');
         }
     };
 
@@ -94,11 +99,12 @@ export const Servicios = () => {
     const confirmDelete = async () => {
         try {
             await deleteServicio(servicioToDelete.id); // Llama al backend para eliminar
+            notifySuccess('Servicio eliminado exitosamente');
             setServicios(servicios.filter(servicio => servicio.id !== servicioToDelete.id)); // Filtra el servicio eliminado de la lista
             setIsConfirmOpen(false); // Cierra el modal de confirmación
         } catch (error) {
             console.error('Error deleting servicio:', error);
-            setError('Error deleting service');
+            notifyError('Error eliminando servicio');
         }
     };
 
@@ -142,7 +148,7 @@ export const Servicios = () => {
     ];
 
     if (loading) return <div>Cargando servicios...</div>;
-    if (error) return <div>{error}</div>;
+   // if (error) return <div>{error}</div>;
     return (
         <div>
             <h1 className="text-2xl font-bold mb-4">Servicios</h1>

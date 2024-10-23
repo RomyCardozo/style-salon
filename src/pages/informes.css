@@ -1,0 +1,15 @@
+@media print {
+    body * {
+      visibility: hidden; /* Ocultar todo excepto el informe */
+    }
+    .printable, .printable * {
+      visibility: visible; /* Mostrar solo la sección del informe */
+    }
+    .printable {
+      padding: 10px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+  }
