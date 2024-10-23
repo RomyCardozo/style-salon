@@ -13,6 +13,7 @@ import {
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteForever } from "react-icons/md";
 import { FaEye } from "react-icons/fa";
+import { notifyError } from "../utils/notificaciones";
 
 export const Venta = () => {
     const [ventas, setVentas] = useState([]);
@@ -34,7 +35,7 @@ export const Venta = () => {
             setVentas(activeVentas);
         } catch (error) {
             console.error('Error loading ventas:', error);
-            setError('Error al cargar las ventas. Por favor, intente de nuevo.');
+            notifyError('Error al cargar las ventas. Por favor, intente de nuevo.');
         } finally {
             setLoading(false);
         }
@@ -62,7 +63,7 @@ export const Venta = () => {
             
         } catch (error) {
             console.error('Error creating venta:', error);
-            setError('Error al crear la venta. Por favor, intente de nuevo.');
+            notifyError('Error al crear la venta. Por favor, intente de nuevo.');
         }
     };
 
@@ -76,7 +77,7 @@ export const Venta = () => {
             closeModal();
         } catch (error) {
             console.error('Error updating venta:', error);
-            setError('Error al actualizar la venta. Por favor, intente de nuevo.');
+            notifyError('Error al actualizar la venta. Por favor, intente de nuevo.');
         }
     };
 
@@ -94,7 +95,7 @@ export const Venta = () => {
             setIsConfirmOpen(false);
         } catch (error) {
             console.error('Error deleting venta:', error);
-            setError('Error al eliminar la venta. Por favor, intente de nuevo.');
+            notifyError('Error al eliminar la venta. Por favor, intente de nuevo.');
         }
     };
 
@@ -146,7 +147,7 @@ export const Venta = () => {
     ];
 
     if (loading) return <div>Cargando ventas...</div>;
-    if (error) return <div className="text-red-500">{error}</div>;
+  //  if (error) return <div className="text-red-500">{error}</div>;
 
     return (
         <div>

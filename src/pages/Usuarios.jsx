@@ -12,6 +12,7 @@ import {
 } from "../services/usuariosService";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteForever } from "react-icons/md";
+import { notifyError, notifySuccess } from "../utils/notificaciones";
 
 export const Usuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
@@ -37,7 +38,7 @@ export const Usuarios = () => {
                 setRoles(rolesData);
             } catch (error) {
                 console.error('Error loading usuarios and roles:', error);
-                setError('Error al cargar usuarios y roles. Por favor, intente de nuevo.');
+                notifyError('Error al cargar usuarios y roles. Por favor, intente de nuevo.');
             } finally {
                 setLoading(false);
             }
@@ -65,8 +66,8 @@ export const Usuarios = () => {
             );
             if (existingUsuario) {
 
-
-                setError('El usuario ya existe. Por favor, elija otro nombre.');
+                notifyError('El usuario ya existe. Por favor, elija otro nombre.');
+              //  setError('El usuario ya existe. Por favor, elija otro nombre.');
                 return;
 
             }
@@ -81,7 +82,7 @@ export const Usuarios = () => {
             closeModal();
         } catch (error) {
             console.error('Error creating usuario:', error);
-            setError('Error al crear el usuario. Por favor, intente de nuevo.');
+            notifyError('Error al crear el usuario. Por favor, intente de nuevo.');
             throw error;
         }
     };
@@ -102,7 +103,7 @@ export const Usuarios = () => {
             closeModal();
         } catch (error) {
             console.error('Error updating usuario:', error);
-            setError('Error al actualizar el usuario. Por favor, intente de nuevo.');
+            notifyError('Error al actualizar el usuario. Por favor, intente de nuevo.');
         }
     };
 
@@ -115,11 +116,13 @@ export const Usuarios = () => {
     const confirmDelete = async () => {
         try {
             await deleteUsuario(usuarioToDelete.id);
+            notifySuccess('Usuario eliminado exitosamente');
             setUsuarios(usuarios.filter(usuario => usuario.id !== usuarioToDelete.id));
             setIsConfirmOpen(false);
+            
         } catch (error) {
             console.error('Error deleting usuario:', error);
-            setError('Error al eliminar el usuario. Por favor, intente de nuevo.');
+            notifyError('Error al eliminar el usuario. Por favor, intente de nuevo.');
         }
     };
 
@@ -162,7 +165,7 @@ export const Usuarios = () => {
     ];
 
     if (loading) return <div>Cargando usuarios...</div>;
-    if (error) return <div className="text-red-500">{error}</div>;
+  //  if (error) return <div className="text-red-500">{error}</div>;
 
     return (
         <div>
