@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "./informes.css";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { getVentasByDateRange, getServiciosByDateRange } from '../services/ventasService';
@@ -20,11 +21,11 @@ const SalesReport = ({ data, startDate, endDate }) => (
         {data.map((row) => (
           <tr key={row.id}>
             <td className="border border-purple-200 p-2">{row.id}</td>
-            <td className="border border-purple-200 p-2">{row.cliente.nombre} {row.cliente.apellido}</td>
+            <td className="border border-purple-200 p-2">{row?.cliente && row.cliente.nombre} {row?.cliente && row.cliente.apellido}</td>
             <td className="border border-purple-200 p-2">
-              {row.detalles.length > 0 ? row.detalles[0].servicio.nombre : "Servicio no disponible"}
+              { row?.detalles && row.detalles.length > 0 ? row.detalles[0]?.servicio?.nombre : "Servicio no disponible"}
             </td>
-            <td className="border border-purple-200 p-2">{row.total}</td>
+            <td className="border border-purple-200 p-2">{row?.total}</td>
           </tr>
         ))}
       </tbody>
