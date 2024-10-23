@@ -8,7 +8,7 @@ import {
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
   const [token, setToken] = useState(localStorage.getItem("authToken") || null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
