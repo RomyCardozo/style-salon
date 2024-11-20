@@ -53,7 +53,7 @@ export const DetalleVenta = () => {
                 <table className="w-full mb-4">
                     <thead>
                         <tr className="border-b">
-                            <th className="py-2 text-left">Producto</th>
+                            <th className="py-2 text-left">Servicio</th>
                             <th className="py-2 text-right">Cantidad</th>
                             <th className="py-2 text-right">Precio</th>
                             <th className="py-2 text-right">Total</th>

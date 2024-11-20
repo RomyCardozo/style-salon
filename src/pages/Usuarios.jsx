@@ -80,6 +80,7 @@ export const Usuarios = () => {
             const createdUsuario = await createUsuario(usuarioToCreate);
             setUsuarios([...usuarios, createdUsuario]);
             closeModal();
+            notifySuccess('Usuario creado exitosamente');
         } catch (error) {
             console.error('Error creating usuario:', error);
             notifyError('Error al crear el usuario. Por favor, intente de nuevo.');
@@ -101,6 +102,7 @@ export const Usuarios = () => {
                 usuario.id === updatedUser.id ? updatedUser : usuario
             ));
             closeModal();
+            notifySuccess('Usuario actualizado exitosamente');	
         } catch (error) {
             console.error('Error updating usuario:', error);
             notifyError('Error al actualizar el usuario. Por favor, intente de nuevo.');

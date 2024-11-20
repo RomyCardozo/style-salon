@@ -23,7 +23,7 @@ export const Sidebar = () => {
 	  { icon: <GiHairStrands />, title: 'Servicios', link: '/home/servicios' },
 	  user?.rol?.descripcion === 'Administrador' ? { icon: <FaUser />, title: 'Usuarios', link: '/home/usuarios' } : null,
 	  { icon: <FaShoppingCart />, title: 'Venta', link: '/home/venta' },
-	  { icon: <FaChartBar />, title: 'Informes', link: '/home/informes' },
+	  user?.rol?.descripcion === 'Administrador' ?  { icon: <FaChartBar />, title: 'Informes', link: '/home/informes' }: null,
 	//  { icon: <FaCog />, title: 'Configuración', link: '/home/configuracion' },
 	//  { icon: <FaUserCircle />, title: "Perfil", link: "/home/perfil" },
   ].filter(Boolean); 

@@ -13,7 +13,7 @@ import {
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteForever } from "react-icons/md";
 import { FaEye } from "react-icons/fa";
-import { notifyError } from "../utils/notificaciones";
+import { notifyError, notifySuccess } from "../utils/notificaciones";
 
 export const Venta = () => {
     const [ventas, setVentas] = useState([]);
@@ -60,6 +60,7 @@ export const Venta = () => {
             const createdVenta = await addVenta(newVenta);
             setVentas([...ventas, createdVenta]);
             closeModal();
+            notifySuccess('Venta creada exitosamente.');
             
         } catch (error) {
             console.error('Error creating venta:', error);
@@ -75,6 +76,7 @@ export const Venta = () => {
             );
             loadVentas();
             closeModal();
+            notifySuccess('Venta actualizada exitosamente.');
         } catch (error) {
             console.error('Error updating venta:', error);
             notifyError('Error al actualizar la venta. Por favor, intente de nuevo.');
@@ -93,6 +95,7 @@ export const Venta = () => {
             await softDeleteVenta(ventaToDelete.id);
             setVentas(ventas.filter(venta => venta.id !== ventaToDelete.id));
             setIsConfirmOpen(false);
+            notifySuccess('Venta eliminada exitosamente.');
         } catch (error) {
             console.error('Error deleting venta:', error);
             notifyError('Error al eliminar la venta. Por favor, intente de nuevo.');
@@ -114,6 +117,7 @@ export const Venta = () => {
         }),
         columnHelper.accessor("total", {
             header: "Total",
+            cell: info => `$${info.getValue().toLocaleString()}`,
         }),
        /* columnHelper.accessor("estado", {
             header: "Estado",

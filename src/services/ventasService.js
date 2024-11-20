@@ -11,13 +11,13 @@ export const getVentas = async () => {
 
 // Agregar una nueva venta
 export const addVenta = async (venta) => {
-    const response = await api.post('ventas/guardar1', venta);
+    const response = await api.post('ventas/guardar', venta);
     return response.data.venta;
 };
 
 // Actualizar una venta existente
 export const updateVenta = async (id, venta) => {
-    const response = await api.put(`ventas/editar2/${id}`, venta);
+    const response = await api.put(`ventas/editar/${id}`, venta);
     return response.data;
 };
 

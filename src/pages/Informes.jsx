@@ -3,6 +3,7 @@ import "./informes.css";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { getVentasByDateRange, getServiciosByDateRange } from '../services/ventasService';
+import { notifyError } from '../utils/notificaciones';
 
 const SalesReport = ({ data, startDate, endDate }) => (
   <div className="bg-white p-8 rounded-lg shadow-md print:shadow-none print:p-0">
@@ -23,7 +24,7 @@ const SalesReport = ({ data, startDate, endDate }) => (
             <td className="border border-purple-200 p-2">{row.id}</td>
             <td className="border border-purple-200 p-2">{row?.cliente && row.cliente.nombre} {row?.cliente && row.cliente.apellido}</td>
             <td className="border border-purple-200 p-2">
-              { row?.detalles && row.detalles.length > 0 ? row.detalles[0]?.servicio?.nombre : "Servicio no disponible"}
+              {row?.detalles && row.detalles.length > 0 ? row.detalles[0]?.servicio?.nombre : "Servicio no disponible"}
             </td>
             <td className="border border-purple-200 p-2">{row?.total}</td>
           </tr>
@@ -34,40 +35,30 @@ const SalesReport = ({ data, startDate, endDate }) => (
 );
 
 
-const ServicesReport = ({ data, startDate, endDate }) => {
-  // Reducir los datos para agrupar servicios
-  const servicesSummary = data.reduce((acc, curr) => {
-    if (!acc[curr.nombre]) acc[curr.nombre] = { cantidad: 0, total: 0 };
-    acc[curr.nombre].cantidad += curr.cantidad; // Sumar cantidades
-    acc[curr.nombre].total += curr.total; // Sumar totales
-    return acc;
-  }, {});
-
-  return (
-    <div className="bg-white p-8 rounded-lg shadow-md print:shadow-none print:p-0">
-      <h2 className="text-2xl font-bold mb-4 text-purple-800">Informe de Servicios</h2>
-      <p className="mb-4">Desde: {startDate} Hasta: {endDate}</p>
-      <table className="w-full border-collapse border border-purple-200">
-        <thead>
-          <tr className="bg-purple-100">
-            <th className="border border-purple-200 p-2">Servicio</th>
-            <th className="border border-purple-200 p-2">Cantidad</th>
-            <th className="border border-purple-200 p-2">Ingresos Totales</th>
+const ServicesReport = ({ data, startDate, endDate }) => (
+  <div className="bg-white p-8 rounded-lg shadow-md print:shadow-none print:p-0">
+    <h2 className="text-2xl font-bold mb-4 text-purple-800">Informe de Servicios</h2>
+    <p className="mb-4">Desde: {startDate} Hasta: {endDate}</p>
+    <table className="w-full border-collapse border border-purple-200">
+      <thead>
+        <tr className="bg-purple-100">
+          <th className="border border-purple-200 p-2">Servicio</th>
+          <th className="border border-purple-200 p-2">Cantidad</th>
+          <th className="border border-purple-200 p-2">Ingresos Totales</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((service, index) => (
+          <tr key={index}>
+            <td className="border border-purple-200 p-2">{service.nombre}</td> {/* Nombre del servicio */}
+            <td className="border border-purple-200 p-2">{service.cantidad}</td> {/* Cantidad */}
+            <td className="border border-purple-200 p-2">{service.total}</td> {/* Ingreso Total */}
           </tr>
-        </thead>
-        <tbody>
-          {data.map((service, index) => (
-            <tr key={index}>
-              <td className="border border-purple-200 p-2">{service.nombre}</td> {/* Nombre del servicio */}
-              <td className="border border-purple-200 p-2">{service.cantidad}</td> {/* Cantidad */}
-              <td className="border border-purple-200 p-2">{service.total}</td> {/* Ingreso Total */}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
 
 export function Informes() {
   const [reportType, setReportType] = useState('sales');
@@ -85,11 +76,22 @@ export function Informes() {
       } else {
         data = await getServiciosByDateRange(startDateTime, endDateTime);
       }
+      //si la fecha de inicio es mayor a la fecha de fin devolver un mensaje de error
+      if (startDate > endDate) {
+        notifyError('La fecha de inicio no puede ser mayor a la fecha de fin.');
+        return;
+      }
+      //si no hubo registros devolver un mensaje de que no hubo registros
+      if (!data || data.length === 0) {
+        notifyError('No se encontraron registros para el rango de fechas seleccionado.');
+        return;
+
+      }
       console.log("Datos del informe:", data); // Imprimir los datos recibidos
       setReportData(data);
     } catch (error) {
       console.error("Error al generar el informe:", error);
-      alert('No se pudieron obtener los datos del informe.');
+      notifyError('No se pudieron obtener los datos del informe.');
     }
   };
 
@@ -99,7 +101,7 @@ export function Informes() {
       //captura solo los datos del reporte
 
     } else {
-      alert('Por favor, genera un informe primero.');
+      notifyError('Por favor, genera un informe primero.');
     }
   };
 
@@ -110,7 +112,11 @@ export function Informes() {
         <div className="mb-4 flex space-x-4">
           <select
             value={reportType}
-            onChange={(e) => setReportType(e.target.value)}
+            onChange={(e) => {
+              setReportType(e.target.value);
+              setReportData(null); // Limpiar los datos del informe
+            }}
+
             className="w-48 p-2 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
           >
             <option value="sales">Informe de Ventas</option>
@@ -122,6 +128,7 @@ export function Informes() {
             placeholderText="Fecha de inicio"
             className="w-48 p-2 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             dateFormat="yyyy-MM-dd" // Solo mostrar la fecha
+            onKeyDown={(e) => e.preventDefault()} // Evita la entrada de texto
           />
           <DatePicker
             selected={endDate}
@@ -129,6 +136,7 @@ export function Informes() {
             placeholderText="Fecha de fin"
             className="w-48 p-2 border border-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
             dateFormat="yyyy-MM-dd" // Solo mostrar la fecha
+            onKeyDown={(e) => e.preventDefault()} // Evita la entrada de texto
           />
         </div>
         <div className="space-x-4">
