@@ -26,7 +26,7 @@ export function Login() {
             alt="Logo del Salón"
             className="w-32 h-32 mx-auto rounded-full border-4 border-purple-500 shadow-lg animate-pulse"
           />
-          <h2 className="mt-4 text-2xl font-bold text-purple-800 ">Bienvenida a tu Salón</h2>
+          <h2 className="mt-4 text-2xl font-bold text-purple-800 ">Bienvenida a tu salón</h2>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -64,7 +64,7 @@ export function Login() {
               disabled={loading}
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-150 ease-in-out"
             >
-              {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
+              {loading ? "Iniciando sesión..." : "Iniciar sesión"}
             </button>
           </div>
         </form>
